@@ -54,4 +54,6 @@ ComplexListNode* ReconnectNodes(ComplexListNode * pHead)
  ComplexListNode* Clone(ComplexListNode* pHead)
  {
      CloneNode(pHead);
-     ConnectSiblingNodes()}
+     ConnectSiblingNodes();
+}
+
