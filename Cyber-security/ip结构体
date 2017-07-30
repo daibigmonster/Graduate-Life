@@ -1,0 +1,97 @@
+struct ip
+  {
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+    unsigned int ip_hl:4;               /* header length */
+    unsigned int ip_v:4;                /* version */
+#endif
+#if __BYTE_ORDER == __BIG_ENDIAN
+    unsigned int ip_v:4;                /* version */
+    unsigned int ip_hl:4;               /* header length */
+#endif
+    u_int8_t ip_tos;                    /* type of service */
+    u_short ip_len;                     /* total length */
+    u_short ip_id;                      /* identification */
+    u_short ip_off;                     /* fragment offset field */
+#define IP_RF 0x8000                    /* reserved fragment flag */
+#define IP_DF 0x4000                    /* dont fragment flag */
+#define IP_MF 0x2000                    /* more fragments flag */
+#define IP_OFFMASK 0x1fff               /* mask for fragmenting bits */
+    u_int8_t ip_ttl;                    /* time to live */
+    u_int8_t ip_p;                      /* protocol */
+    u_short ip_sum;                     /* checksum */
+    struct in_addr ip_src, ip_dst;      /* source and dest address */
+  };
+ 1.half_strem
+{
+    char state;//套接字的状态，也就是TCP的链接状态
+    char collect;//可以用来表示有数据到达。
+    char collect_urg;
+    char *data;用来存储正常接收到的数据
+    int offset;存储在data中数据的第一个字节的偏移量
+    int count;表示从TCP连接开始已经存储到data中的数据的字节数
+    int count_new;表示有多少新数据存储到data中，如果为0,表示没有新的数据到达
+    int bufsize;
+    int rmem_alloc;
+    int urg_count;
+    u_int acked;
+    u_int seq;
+    u_int ack_seq;
+    u_int first_data_seq;
+    u_char urgdata;用来存储紧急数据
+    u_char count_new_urg;表述有新的紧急数据到达，如果为0,则表示没有新的数据到达
+    u_char urg_seen;
+    u_int urg_ptr;
+    u_short window;
+    u_char ts_on;
+    u_int curr_ts;
+    struct skbuff *list;
+    struct skbuff *listtail;
+ }
+ struct tcp_stream
+ {
+     struct tuple4 addr; 地址和端口
+     char nids_state;表示连接的逻辑状态
+     struct lurker_node *listeners;
+     struct half_strean client;表示客户端信息
+     struct half_stream server;表示服务端信息
+     struct tcp_stream *next_node;
+     struct tcp_stream *prev_node;
+     int hash_index;
+     struct tcp_stream *next_time;
+     struct tcp_stream *prev_time;
+     int read;
+     struct tcp_stream *next_free;
+ }
+truct tcphdr
+{
+    u_int16_t source;
+    u_int16_t dest;
+    u_int32_t seq;
+    u_int32_t ack_seq;
+# if __BYTE_ORDER == __LITTLE_ENDIAN
+    u_int16_t res1:4;
+    u_int16_t doff:4;
+    u_int16_t fin:1;
+    u_int16_t syn:1;
+    u_int16_t rst:1;
+    u_int16_t psh:1;
+    u_int16_t ack:1;
+    u_int16_t urg:1;
+    u_int16_t res2:2;
+# elif __BYTE_ORDER == __BIG_ENDIAN
+    u_int16_t doff:4;
+    u_int16_t res1:4;
+    u_int16_t res2:2;
+    u_int16_t urg:1;
+    u_int16_t ack:1;
+    u_int16_t psh:1;
+    u_int16_t rst:1;
+    u_int16_t syn:1;
+    u_int16_t fin:1;
+# else
+#   error "Adjust your <bits/endian.h> defines"
+# endif
+    u_int16_t window;
+    u_int16_t check;
+    u_int16_t urg_ptr;
+};
