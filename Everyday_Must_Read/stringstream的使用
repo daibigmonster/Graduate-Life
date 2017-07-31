@@ -1,0 +1,50 @@
+例子一：基本数据类型转换例子 int转string
+
+ 
+#include <string>
+#include <sstream>
+#include <iostream> 
+
+int main()
+{
+    std::stringstream stream;
+    std::string result;
+    int i = 1000;
+    stream << i; //将int输入流
+    stream >> result; //从stream中抽取前面插入的int值
+    std::cout << result << std::endl; // print the string "1000"
+} 
+
+
+例子二：除了基本类型的转换，也支持char *的转换。
+
+ 
+#include <sstream>
+#include <iostream> 
+
+int main()
+{
+    std::stringstream stream;
+    char result[8] ;
+    stream << 8888; //向stream中插入8888
+    stream >> result; //抽取stream中的值到result
+    std::cout << result << std::endl; // 屏幕显示 "8888"
+} 
+
+例子三：再进行多次转换的时候，必须调用stringstream的成员函数clear().
+
+ 
+#include <sstream>
+#include <iostream>
+int main()
+{
+    std::stringstream stream;
+    int first, second;
+    stream<< "456"; //插入字符串
+    stream >> first; //转换成int
+    std::cout << first << std::endl;
+    stream.clear(); //在进行多次转换前，必须清除stream
+    stream << true; //插入bool值
+    stream >> second; //提取出int
+    std::cout << second << std::endl;
+} 
