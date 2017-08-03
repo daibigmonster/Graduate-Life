@@ -23,25 +23,60 @@ GGBBG
 #include <iostream>
 #include<string>
 using namespace std;
+bool queue(string &target);
+int count(string &target);
 int main()
 {
     string target;
     cin>>target;
+    int result=count(target);
+    cout<<result<<endl;
+    return 0;
+}
+bool queue(string &target)
+{
     int length=target.size();
-    int boynum=0,girlnum=0,changes=0;
+    bool youxu=true;
+    int changes=0;
     for(int i=length-1;i;--i)
     {
-        if(target[i]=='G')boynum++;
-        if(target[i]=='B')girlnum++;
         if(target[i-1]!=target[i])changes++;
+        if(changes>1)
+        {
+            youxu=false;
+            break;
+        }
     }
-    if(boynum==0||girlnum==0)return 0;
-    if(changes==1)return 0;
-    if(boynum==girlbum)
+    return youxu;
+}
+int count(string &target)
+{
+    int length=target.size();
+    int changes=0;
+    int bcount=0,gcount=0;
+    bool youxu=queue(target);
+    if(youxu)return 0;
+    int loc=target.find('B');
+    while(loc!=(length-1))
     {
-        
-        else
+        bcount++;
+        if(target[loc]!=target[loc+1])
+            swap(target[loc],target[loc+1]);
+        target[length-1]='B';
+        youxu=queue(target);
+        if(youxu)break;
+        loc=target.find('B');
     }
-    cout<<target.size()<<endl;
-    return 0;
+    loc=target.find('G');
+    while(loc!=(length-1))
+    {
+        gcount++;
+        for(int i=loc;i<length-1;++i)
+            target[i]=target[i+1];
+        target[length-1]='G';
+        youxu=queue(target);
+        if(youxu)break;
+        loc=target.find('G');
+    }
+    return bcount<gcount? bcount:gcount;
 }
