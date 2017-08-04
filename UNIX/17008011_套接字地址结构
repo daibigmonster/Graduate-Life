@@ -1,8 +1,11 @@
+
+socklen_t 套阶级地址结构一般为uint32_t
+sa_family_t 套接字地址结构的地址族
 大多数套接字函数都需要一个指向套接字地址结构的指针作为参数。每个协议族都定义它自己的套接字地址结构。这些结构都以sockaddr_开头，并以对应每个协议族的唯一后缀结尾
 IPv4套接字地址结构
 IPv4套接字资质结构通常也称为“网际套接字地址结构”，它以sockaddr_in命名，定义在<netinet/in.h>头文件中
 struct in_addr{
-    in_addr_t s_addt;//32位的IP地址网络字节序
+    in_addr_t s_addr;//32位的IP地址网络字节序
 }
 struct sockaddr_in{
     uint8_t sin_len;
@@ -18,3 +21,28 @@ POSIX规范只需要这个结构中的3个字段,sin_family、sin_addr和sin_por
 32位IPv4地址存在两种不同的访问方法。举例来说，如果serv定义为某个网际套接字地址结构，那么serv.sin_addr将按in_addr结构引用其中的32位IPv4地址，而serc.sin_addr.s_addr将按in_addr_t(通常是一个无符号32位整数)引用同一个32位IPv4地址。因此，我们必须正确第使用IPv4地址，尤其是在将它作为函数的参数是，因为编译器对传递结构和传递整数的处理是完全不同的
 套接字地址结构仅在给定主机上使用：虽然结构中的某些字段(例如IP地址和端口号)用在不同主机之间的通信中，但是结构本身并不在主机之间传递
 套接字函数被定义为指向某个通用套接字地址结构的一个指针作为其参数之一，这正如bind函数的ANSI C函数原型所示
+int bind(int,struct sockaddr *,socklen_t);
+struct sockaddr_len serv;
+bind(sockfd,(struct sockaddr *)&serv,sizeof(serv));
+
+IPv6套接字地址结构
+struct in6_addr{
+    uint8_t s6_addr[16];
+};
+#define SIN6_LEN;
+struct sockaddr_in6{
+    uint8_t sin6_len;
+    sa_family sin6_familyl
+    in_port_t sin6_port;
+    uint32_t sin6_flowinfo;
+    uint32_t sin6_scope_id;
+}
+
+对于具备范围的地址（soped address）,sin6_scope_id字段标识其范围
+
+值-结果参数
+我们提到过，当往一个套接字函数传递一个套接字地址结构时，该结构总是以引用形式来传递，也就是说传递的是指向该结构的一个指针。该结构的长度也作为一个参数来传递，不过其传递方式取决于该结构的传递方向：是从进程到内核，还是从内核到进程。
+从进程到内核传递套接字地址结构的函数有3个bind，connect和sendto.这些函数的一个参数是指向某个套接字地址结构的指针，另一个参数是该结构的整数大小
+struct sockaddr_in serv;
+connect(sockfd,(SA *)&serv,sizeof(serv));
+
