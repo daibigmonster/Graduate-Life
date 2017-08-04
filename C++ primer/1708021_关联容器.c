@@ -11,7 +11,7 @@ buffoon can for heavy thinekers
 数学为集合定义了一些标准操作，例如，并集包含两个集合合并后的内容。如果两个集合包含相同的值，则这个值将在并集中值出现一次，这是因为键是唯一的。交集包含两个元素都有的元素。
 STL提供了支持这些操作的算法。它们是通用函数，而不是方法，因此并非只能用于set对象。然而，所有set对象都自动满足使用这些算法的先决条件，即容器是经过排序的。set_union()函数接收5个迭代器参数。前来嗯个迭代器定义了第一个集合的区间，接下来的两个定义了第二个集合区间，最后一个迭代器树输出迭代器，指出将结果复制到什么位置。例如，要显示集合A和B的并集，可以这样做：
 set_union(A.begin(),A.end(),B.begin(),B.end()),
-    ostream_itreator<string,char> out(cout," ");
+    ostream_iterator<string,char> out(cout," ");
 假设要将结果放到集合C中，而不是显示它，则最后一个参数应该是一个指向C的迭代器。显而易见的选择是C.begin(),但它不管用，原因由两个。首先，关联集合将键看作常量，所以C.begin()返回的迭代器是常量迭代器，不用做输出迭代器。不直接使用C.begin()的第二个原因是，与copy()相似,set_union()将覆盖容器中已有的数据，并要求容器由足够的空间容纳新信息。C是空的，不能满足这种要求。但前面讨论的模板insert_iterator可以解决这两个问题。前面说过，它可以将复制转换为插入。另外，它可以将复制转换为插入。另外，它还模拟了输出迭代器概念，可以用它将信息写入容器。因此，可以创建一个匿名insert_iteratot,将信息复制给C。前面说过，其构造函数将容器名称和迭代器作为参数：
 set_union(A.begin(),A.end(),B.begin(),b.end(),insert_iterator<set<string>>(c,c.begin()));
 函数set_intersection()和set_difference()分别查找交际和获得两个集合的差，它们的接口与set_union()相同
