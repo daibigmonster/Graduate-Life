@@ -10,3 +10,38 @@
 输出描述:
 
 输出一个整数表示最少的操作次数。*/
+#include <iostream>
+#include<string>
+using namespace std;
+int count(string &target);
+int main()
+{
+    string target;
+    cin>>target;
+    int result=count(target);
+    cout<<result<<endl;
+    return 0;
+}
+int count(string &target)
+{
+    int length=target.size();
+    int bnum=0,gnum=0;
+    int bcount=0,gcount=0;
+    
+    for(int i=0;i<length;++i)
+    {
+        if(target[i]=='B'){
+            bnum++;
+            bcount+=i;
+        }
+        else{
+            gnum++;
+            gcount+=i;
+        }
+    }
+    int comp1=bcount-(bnum*bnum-bnum)/2;
+    int comp2=gcount-(gnum*gnum-gnum)/2;
+    cout<<bnum<<" "<<gnum<<endl;
+    cout<<comp1<<" "<<comp2<<endl;
+    return min(comp1,comp2);
+}
