@@ -23,3 +23,8 @@ int main(){
          cout<<ratings[i]<<"\t"<<titles[i]<<endl;
      return 0;
 }
+/*除了分配存储空间外，vector模板还可以完成那些任务呢？所有STL容器都提供了一些基本方法，其中包括size()
+swap()---交换两个容器的内容、begin()、end()
+C++11自动类型推断，比如，可以这样
+vecotr<double>::iterator pd=score.begin();
+auto pd=score.begin();

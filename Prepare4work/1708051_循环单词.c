@@ -23,8 +23,8 @@ int main()
     vector<string> wordlist;
     set<int> recoder;
     int result=0;
-    //if(length<=1)result=0;
-    //else{
+    if(length<=1)result=0;
+    else{
     for(int i=0;i<length;i++){
         string str;
         cin>>str;
@@ -32,19 +32,16 @@ int main()
     }
     for(int i=0;i<length;i++)
     {
-        if(recoder.find(i)==recoder.end())continue;
+        if(recoder.count(i)!=0)continue;
         string str=wordlist[i]+wordlist[i];
         for(int j=i+1;j<length;j++)
         {
-            if(str.find(wordlist[j])!=string::npos);
+            if(str.find(wordlist[j])!=string::npos&&(wordlist[j].size()==str.size()/2))
             recoder.insert(j);
         }
         result++;
-       // int loc=str.find(wordlist[i]);
-       // cout<<loc<<endl;
     }
-    //}
+    }
     cout<<result<<endl;
-    //cout<<wordlist[0].size()<<endl;
     return 0;
 }
