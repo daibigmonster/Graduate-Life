@@ -2,7 +2,7 @@
 using namespace std;
 int count(int n,int x){
     int res=0,j;
-    for(int i=0;j=n/10;i*=10){
+    for(int i=1;j=n/i;i*=10){
         int high=j/10;
         if(x==0){
             if(high)high--;
