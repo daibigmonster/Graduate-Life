@@ -18,7 +18,8 @@ int count0(int num)
     {
         curnum=num/i;
         lownum=num%i;
-        count+=(highnum-1)*pow(10,len(i/10))+lownum+1; 
+        int curlen=len(i);
+        count+=(highnum-1)*pow(10,curlen-1)+lownum+1; 
        // cout<<count<<endl;
     }
     return count;
