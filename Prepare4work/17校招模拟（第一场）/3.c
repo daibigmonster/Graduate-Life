@@ -1,29 +1,6 @@
 #include<iostream>
-#include<vector>
-#include<math.h>
+#include<string>
 using namespace std;
-int len(int num)
-{
-    if(num==0) return 0;
-    int length=1;
-    while(num/=10)
-        length++;
-    return length;}
-int count0(int num)
-{
-    if(num<=9)return 0;
-    int highnum,curnum,lownum;
-    int length=len(num),count=0;
-    for(int i=1;highnum=(int)(num/(i*10));i*=10)
-    {
-        curnum=(int)(num/i);
-        lownum=num%i;
-        int curlen=len(i);
-        count+=(highnum-1)*pow(10,curlen-1)+lownum+1; 
-       // cout<<count<<endl;
-    }
-    return count;
-}
 int main()
 {
     int num;
@@ -33,5 +10,16 @@ int main()
    /*for(int i=1;i<10;i++){
     cout<<" "<<count(num,i);}
     cout<<endl;*/}
+    string A,B;
+    cin>>A>>B;
+    int result=A.size(),count=0;
+    for(int i=0;i<A.size();i++){
+        if(A.size()!=B.size())break;
+        if(A[i]=='A'&&B[i]=='T'||
+           A[i]=='T'&&B[i]=='A'||
+           A[i]=='C'&&B[i]=='G'||
+           A[i]=='G'&&B[i]=='C')
+             count++;}
+    cout<<result-count<<endl;
     return 0;
 }

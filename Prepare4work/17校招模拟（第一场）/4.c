@@ -25,7 +25,9 @@ for(int i=n-1;i;--i){
     }
 }
 if(mistake||maybenum.size()>1)cout<<"mistake"<<endl;
-else if(maybenum.empty())cout<<num.front()-1<<" "<<num.back()+1<<endl;
+else if(maybenum.empty()){
+    if(num.front()-1)cout<<num.front()-1;
+    cout<<" "<<num.back()+1<<endl;}
 else if(maybenum.size()==1)cout<<maybenum.front()<<endl;
 return 0;
 }
