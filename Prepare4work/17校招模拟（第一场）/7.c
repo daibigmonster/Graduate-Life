@@ -15,13 +15,6 @@ int countnum(int num,int k)
     highnum=num/(factor*10);
     if(k==0)
     {
-<<<<<<< HEAD
-        curnum=num/i;
-        lownum=num%i;
-        int curlen=len(i);
-        count+=(highnum-1)*pow(10,curlen-1)+lownum+1; 
-       // cout<<count<<endl;
-=======
         if(highnum)highnum--;
         else break;
     }
@@ -31,7 +24,6 @@ int countnum(int num,int k)
     else if(curnum==k)
         count+=lownum+1;
     factor*=10;
->>>>>>> 856b8e4a784a690b8123c93237c425a2781a8f3e
     }
     return count;
     
