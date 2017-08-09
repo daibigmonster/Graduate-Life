@@ -1,0 +1,7 @@
+1主机字节序和网络字节序之间相互转换。这两种字节序之间的转换使用以下4个函数。
+#include<netinet>
+unint16_t htons(unint16_t host16bitvalue);
+unint32_t htonl(unint32_t host32bitvalue);
+unint16_t ntohs(unint16_t net16bitvalue);
+unint32_t ntohl(unint32_t net32bitvalue);
+在这些函数名字中,h代表host,n代表network,s=short,l=long;
