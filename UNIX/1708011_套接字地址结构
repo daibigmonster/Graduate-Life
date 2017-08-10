@@ -9,7 +9,7 @@ struct in_addr{
 }
 struct sockaddr_in{
     uint8_t sin_len;
-    sa_fammily sin_family;
+    sa_family sin_family;
     in_port_t sin_port;
     struct in_addr sin_addr;
     char sin_zreo[8];
