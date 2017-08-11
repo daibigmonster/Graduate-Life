@@ -23,6 +23,7 @@ void remodel(std::string & str)
     return
 }
 注意到只能指针模板位于名称空间std中。程序清单16.5是一个简单的程序，要是了如何使用全部三种只能指针。要编译该程序，您的编译器必须支持C++11新增的类share_ptr和unique_ptr.每个指针能指针都放在一个代码块内，这样离开代码块时，指针将过期。*/
+//#include "boost"
 #include <iostream>
 #include <string>
 #include <memory>
@@ -43,7 +44,7 @@ int main()
     ps->comment();
 }
 {
-    shared_ptr<Report> ps (new Report("using share_ptr"));
+    shared_ptr<Report> ps (new Report("using shared_ptr"));
     ps->comment();
 }
 {
@@ -54,4 +55,4 @@ int main()
 }
 
 /*选择只能指针，应该使用那种智能指针呢？如果程序姚使用多个指向同一个对象的指针，应该选择share_ptr.这样的情况包括：有一个指针数组，并使用一些辅助指针来表示特定的元素，如最大的元素和最小的元素:两个对象包含都指向第三个对象的指针;STL容器包含指针。很多STL算法都支持复制和赋值操作，这些操作可用于shared_ptr，但不能用于unique_pte和auto_ptr.如果您的编译器没有提供shared_ptr,可以使用Boost库提供的shared_ptr.
-如果程序不需要多个指向同一个对象的指针，则可使用unique_ptr.如果函数使用new分配内存，并返回指向该内存的指针，将其返回类型声明为unique_ptr是不错的选择。这样，所有权转让给接收返回值的unique_ptr,而该智能指针将负责调用delete.可将unique_ptr存储到STL容器中，只要不调用将一个unique_ptr复制或赋给另一个的方法或运算（如sort()）
+如果程序不需要多个指向同一个对象的指针，则可使用unique_ptr.如果函数使用new分配内存，并返回指向该内存的指针，将其返回类型声明为unique_ptr是不错的选择。这样，所有权转让给接收返回值的unique_ptr,而该智能指针将负责调用delete.可将unique_ptr存储到STL容器中，只要不调用将一个unique_ptr复制或赋给另一个的方法或运算（如sort()）*/
