@@ -22,4 +22,4 @@ accept函数由TCP服务器调用，用于从已完成连接队列队头返回�
 #include<sys/socket.h>
 int accept(int sockfd,struuct *cliaddr,sockelen_t *addrlen);
 参数cliaddr和addrlen用来返回已连接的对端进程（客户）的协议地址。调用前，我们将由*addrlen所引用的整数值置为由cliaddr所指的套接字地址结构的长度，返回时，该整数值即为由内核存放在该套接字地址结构内的确切字符数。
-如果accept成功，那么其返回值是由内核自动生成的一个全新描述符，代表与所返回客户的TCP连接。在讨论accept函数是，我们称它的第一个参数为监听套接字描述符，称它的返回值为已连接套接字描述符。区分这两个套接字非常重要。一个服务器通常仅仅创建一个监听套接字，它在
+
