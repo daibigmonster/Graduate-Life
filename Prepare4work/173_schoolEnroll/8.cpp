@@ -25,5 +25,26 @@
 #include<iostream>
 #include<map>
 #include<algorithm>
-/*我们要培养战斗力最强的人，有两种情况
-1潜力大于战斗力
+using namespace std;
+struct solider{
+    int x;
+    int y;
+};
+int main(){
+    int n;
+    long long Cursum=0,AvailableCE=0,Maxsum=0;
+    cin>>n;
+    solider a[n];
+    for(int i=0;i<n;i++){
+        cin>>a[i].x>>a[i].y;
+        if(a[i].x<a[i].y){ 
+            AvailableCE+=a[i].y-a[i].x;
+            Cursum=2*a[i].x;
+            if(Cursum>Maxsum)Maxsum=Cursum;}
+        else{
+            Cursum=a[i].x+a[i].y;
+            if(Cursum>Maxsum)Maxsum=Cursum;}
+    }
+     cout<<Maxsum+AvailableCE<<endl;
+     return 0;
+}
