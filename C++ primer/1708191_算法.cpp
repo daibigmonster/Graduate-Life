@@ -11,4 +11,9 @@ STL将算法库分成4组：
 数字操作包括将区间的内容累积、计算两个容器的内部成绩、计算小计、计算向另对象差的函数。通常，这些都是数组的操作特性，因此,vector是最有可能使用这些操作的容器
 
 算法的通用特征
-正如你多次看到的，STL函数使用迭代器和迭代器区间，从函数元素性可以有关
+正如你多次看到的，STL函数使用迭代器和迭代器区间，从函数原型可知有关迭代器的假设。
+copy()函数的原型如下：
+template<class InputIterator,class OutputInterator>
+OutputIterator copy(InputInterator first,InputIterator last,
+                   OutputIterator result);
+因为标识符InputIterator和OutputIterator都是模板参数，所以它们就像T和U一样。然而，STL文档
