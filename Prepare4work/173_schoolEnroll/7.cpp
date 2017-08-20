@@ -36,7 +36,7 @@ int main(){
             else
                 dp2[i]=1;
         }
-        for(auto x:dp1)cout<<x<<" ";
+       // for(auto x:dp1)cout<<x<<" ";
       //  cout<<endl;
        // for(auto x:dp2)cout<<x<<" ";
         int ret=1,m=1;
