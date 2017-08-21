@@ -16,4 +16,12 @@ copy()函数的原型如下：
 template<class InputIterator,class OutputInterator>
 OutputIterator copy(InputInterator first,InputIterator last,
                    OutputIterator result);
-因为标识符InputIterator和OutputIterator都是模板参数，所以它们就像T和U一样。然而，STL文档
+因为标识符InputIterator和OutputIterator都是模板参数，所以它们就像T和U一样。然而，STL文档使用模板参数名称来表示参数模型的概念。因此上述声明告诉我们，区间参数必须是输入迭代器或更高级的迭代器，而只是结果存储位置的迭代器必须是输出迭代器或更高级别的迭代器。
+对算法进行分类的方式之一是按结果放置的位置进行分类。有些算法就地完成工作，有些则创建拷贝。例如，在sort()函数完成时，结果被存放在原始数据的位置上，因此,sort()是就地算法：而copy()函数将结果发送到另一个位置，所以它是复制算法。
+有些算法由来嗯个版本：就地版本和复制版本。STL的约定是S，复制版本的名称将以_copy结尾。复制版本将接收一个额外的输出迭代器参数，该参数指定结果的放置位置。例如，函数replace()的原型如下：
+template<class FoewardIterator,classT>
+void replace(ForwardIterator first,ForwardIterator last,con T& old_value,const T& new_value);
+它将所有的old_value替换为new_value,这就是就地发生的。由于这种算法同时读写容器元素，因此迭代器类型必须是ForwardIterator或者更高级别的。复制版本的原型如下
+temp;ate<class InputIterator,clas OutputIterator,class T>
+OutputIterator replace_copy(InputIterator first,InputIterator last,OutputIterator result,const T& old_calue,const T& new_value);
+在这里，replace_copy()的返回类型为OutputIterator.对于复制算法，统一的约定是：返回一个迭代器，该迭代器指向复制的最后一个值后面的一个位置。
