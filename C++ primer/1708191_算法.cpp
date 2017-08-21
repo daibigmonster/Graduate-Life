@@ -22,6 +22,12 @@ OutputIterator copy(InputInterator first,InputIterator last,
 template<class FoewardIterator,classT>
 void replace(ForwardIterator first,ForwardIterator last,con T& old_value,const T& new_value);
 它将所有的old_value替换为new_value,这就是就地发生的。由于这种算法同时读写容器元素，因此迭代器类型必须是ForwardIterator或者更高级别的。复制版本的原型如下
-temp;ate<class InputIterator,clas OutputIterator,class T>
+template<class InputIterator,clas OutputIterator,class T>
 OutputIterator replace_copy(InputIterator first,InputIterator last,OutputIterator result,const T& old_calue,const T& new_value);
-在这里，replace_copy()的返回类型为OutputIterator.对于复制算法，统一的约定是：返回一个迭代器，该迭代器指向复制的最后一个值后面的一个位置。
+在这里，结果被复制到result指定的欣慰值，因此对于制定区间而言，只读输入迭代器足够了
+replace_copy()的返回类型为OutputIterator.对于复制算法，统一的约定是：返回一个迭代器，该迭代器指向复制的最后一个值后面的一个位置。
+另一个常见的变体是：有些函数右这样的版本，即根据将函数应用与容器元素得到的结果来执行操作，这些版本的名称通常以_if结尾。例如，如果将函数用于旧值时，返回的值为true，则replace_if()将把旧值替换为新的值，下面是该函数的原型
+template<calss ForwardIterator,class Predicate class T>
+void replace_if(ForwardIterator first,ForwardIterator last,Predicate pred,const T& new_value);
+与InputIterator一样，Predicate也是模板参数名称，可以为T或U。然而，STL选择用Predicate来提醒用户，实参应模拟Predicate概念。注意，如果使用了错误的迭代器，则编译器试图实例化模板时，将显示大量的错误消息。
+
