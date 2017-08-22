@@ -286,13 +286,9 @@ void call_back(u_char *user, const struct pcap_pkthdr *h, const u_char *sp)
 }
 int main(int argc,char *argv[])
 {
-	for(size_t i = 0 ; i < argc; ++i)
-	{	
-		cerr << argv[i] << endl;
-	}    
-	pcap_t *handle;
+    pcap_t *handle;
     char error[100];
-    char file[]="1707110.pcap";
+    char file[]="1.pcap";
     bpf_u_int32 ip;
     struct bpf_program bpf_filter;
     if((handle=pcap_open_offline(file,error))==NULL)
