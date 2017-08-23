@@ -11,32 +11,28 @@
 
 输出一个整数，表示最少需要处理的时间*/
 #include<iostream>
-#include<set>
-
+#include<vector>
+#include<algorithm>
 using namespace std;
-int main()
-{
-    int length;
-    cin>>length;
-    int a[51];
-    int sum=0,ans;
-    for(int i=0;i<length;++i){
-        int temp;
-        cin>>temp;
-        a[i]=temp/1024;
-        sum+=a[i];
-    }
-    set<int>s;
-    s.insert(0);
-    for(int i=0;i<length;i++){
-    set<int>added;
-    for(set<int>::iterator it=s.begin();it!=s.end();it++)
-        added.insert(*it+a[i]);
-    s.insert(added.begin(),added.end());
-    ans=sum;
-    for(set<int>::iterator it=s.begin();it!=s.end();it++)
-        ans=min(max(*it,sum-*it),ans);
-    }
-    cout<<ans*1024<<endl;
-    return 0;
+const int mul=1024;
+int main(){
+	int n,totalen=0;
+	cin>>n;
+	vector<int> task(n,0);
+	for(int i=0;i<n;i++){
+		cin>>task[i];
+		task[i]/=mul;
+		totalen+=task[i];
+	}
+    vector<int> dp(totalen/2,0);
+	for(int i=0;i<n;i++){
+	//	cout<<i<<endl;
+		for(int j=(totalen/2);j>=task[i];j--){
+			dp[j]=max(dp[j],dp[j-task[i]]+task[i]);
+   //         cout<<j<<" "<<dp[j]<<" ";
+		}
+	//	cout<<endl;
+	}
+	cout<<(totalen-dp[totalen/2])*mul;
+	return 0;
 }

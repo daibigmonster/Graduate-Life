@@ -11,5 +11,61 @@ void Buffoon::update()
 std::cout<<"Company: "<<company
 		<<" Shares: "<<shares<<endl;
 		<<" Shares Price: $"<<share_val
-		<<""
-
+		<<" Total Worth: $"<<total_val<<endl;
+其中，company、shares等都是Stock类的私有数据成员*/
+#include<iostream>
+#include "1708171_stock.h"
+void Stock::acquire(const std::string &co,long n,double pr){
+	company=co;
+	if(n<0){
+		std::<<"Number of shares can't be negative;"
+			<<compant<<" shares set to 0.\n";
+		shares=0;
+		}
+		else
+			shares=n;
+		shares_val=pr;
+		set_tot();
+} 
+void Stock::buy(long num,double price){
+	if(num<0)
+	{
+		std::cout<<"Number of shares purchased can't be negative."
+			<<"Transaction is aborted.\n";
+	}
+	else{
+		shares+=num;
+		share_val=price;
+		set_tot();
+	}
+}
+void Stock::sell(long num,double price){
+	using std::cout;
+	if(num<0)
+	{
+		std::cout<<"Number of shares sold can't be negative."
+			<<"Transaction is aborted.\n";
+	}
+	else if(num>shares){
+		cout<<"You can't sell more than you have!"
+			<<"Transaction is aborted.\n";
+	}
+	else{
+		shares-=num;
+		share_val=price;
+		set_tot();
+	}
+}
+void Stock::update(double price){
+	share_val=price;
+	set_tot();
+}
+void Stock::show(){
+	std::cout<<"Company: "<<company
+			<<" Shares "<<shares<<'\n'
+			<<" share Price: $"<<<<share_val;
+			<<" Total Worth: $"<<<<total_val<<'\n';
+}
+/*
+1成员函数说明
+acquire()函数管理对某个公司股票的首次购买，而buy()和sell()管理增减或减少持有的股票。方法buy()和sell
