@@ -1,23 +1,24 @@
 #include "unp.h"
-int main(int argc,char **argc)
+#include "1708231_str_echo函数.h"
+int main(int argc,char **argv)
 {
     int listenfd,connfd;
     pid_t childpid;
-    socklen_t chilen;
+    socklen_t clilen;
     struct sockaddr_in cliaddr,servaddr;
-    listenfd=Sock(AAF_INET,SOCK_STREAM,0);
+    listenfd=Socket(AF_INET,SOCK_STREAM,0);
     bzero(&servaddr,sizeof(servaddr));
-    servaddr.sin_famiily=AF_INET;
+    servaddr.sin_family=AF_INET;
     servaddr.sin_addr.s_addr=htonl(INADDR_ANY);//通配地址由常值INADR_ANY来指定，其值一般为0。它告知内核去选择IP地址。
     servaddr.sin_port=htons(SERV_PORT);
     Bind(listenfd,(SA *)&servaddr,sizeof(servaddr));
     Listen(listenfd,LISTENQ);
     for(;;){
         clilen=sizeof(cliaddr);
-        connfd=Accept(listenfd,(SA *)&cliaddr,&clileb); //如果我们对返回客户协议地址不感兴趣，那么可以把cliaddr和addrlen均置为空指针。
-        if((childpi=Fork())==0){
+        connfd=Accept(listenfd,(SA *)&cliaddr,&clilen); //如果我们对返回客户协议地址不感兴趣，那么可以把cliaddr和addrlen均置为空指针。
+        if((childpid=Fork())==0){
             Close(listenfd);
-            str_echp(connfd);//process the request
+            str_echo(connfd);//process the request
             exit(0);
         }
         Close(connfd);    
