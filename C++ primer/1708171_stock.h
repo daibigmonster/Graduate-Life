@@ -15,7 +15,7 @@ public:
    void sell(long num,double price);
    void update(double price);
    void show();
-}
+};
 #endif
 /*接下来，要存储的数据以类数据成员（如company和shares）的形式出现。例如，sally的company成员存储了公司名称，share成员存储了sally持有的股票数量，share_val存储了每股价格。同样，要执行的操作以类函数成员（方法，如sell()和update()）的形式出现。成员函数可以就地定义，也可以用原型表示
 1访问控制
@@ -27,5 +27,4 @@ public:
 
 C++程序员通常使用类来实现类描述，而把接口限制为只表示纯粹的数据对象
 
-实现类成员函数
-
+实现类成员函数*/

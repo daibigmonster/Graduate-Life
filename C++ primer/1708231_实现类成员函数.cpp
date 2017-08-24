@@ -18,13 +18,13 @@ std::cout<<"Company: "<<company
 void Stock::acquire(const std::string &co,long n,double pr){
 	company=co;
 	if(n<0){
-		std::<<"Number of shares can't be negative;"
-			<<compant<<" shares set to 0.\n";
+		std::cout<<"Number of shares can't be negative;"
+			<<company<<" shares set to 0.\n";
 		shares=0;
 		}
 		else
 			shares=n;
-		shares_val=pr;
+		share_val=pr;
 		set_tot();
 } 
 void Stock::buy(long num,double price){
@@ -63,9 +63,23 @@ void Stock::update(double price){
 void Stock::show(){
 	std::cout<<"Company: "<<company
 			<<" Shares "<<shares<<'\n'
-			<<" share Price: $"<<<<share_val;
-			<<" Total Worth: $"<<<<total_val<<'\n';
+			<<" share Price: $"<<share_val
+			<<" Total Worth: $"<<total_val<<'\n';
 }
 /*
 1成员函数说明
-acquire()函数管理对某个公司股票的首次购买，而buy()和sell()管理增减或减少持有的股票。方法buy()和sell
+acquire()函数管理对某个公司股票的首次购买，而buy()和sell()管理增减或减少持有的股票。方法buy()和sell()管理增加或减少持有的股票。方法buy()和sell()确保买入或卖出的股数不为负。另外，如果用户试图卖出超过它持有的股票数量，则sell()函数将结束这次交易
+4个成员函数设置或重新设置了total_val成员值，。这个类并非将计算代码编写4此，而是让每个函数都调用set_tot()函数。由于set_tot()只是实现代码的一种方式，而不是公有接口的组成部分，因此这个类将其声明为私有成员函数(即编写这个类的人可以使用它，但编写代码使用这个类的人不能使用)。
+2内联方法
+其定义位于类声明中的函数都将自动称为内联函数，因此Stock::set_tot()是一个内联函数。类声明常将短小的称为作为内联函数
+如果愿意，也可以在类声明之外定义成员函数，并使称为内联函数，为此，只需在类实现部分中定义函数时使用inline限定符即可
+class Stock{
+private:
+	voidset_tot();
+public:...
+};
+inline void Stock::set_tot(){
+	total_val=shares*share_val;}
+所创建的每个新对象都有自己的存储空间，用于存储其内部变量和类成员：但同一个类的所有对象共享统一组方法，即每种方法只有一个副本。
+例如：假设kate和joe都是Stock对象，则kate.shares将占据一个内存块，而joe.shares占用另一个内存块，但kate.show()和joe.show()都调用同一个方法，也就是说，它们将执行同一个代码块，只是将这些代码用于不同的数据。在OOP中，调用成员函数被称为发送消息，因此同样的消息发送给两个不同的对象将调用同一个方法，但该方法被用于两个不同的对象。
+*/
