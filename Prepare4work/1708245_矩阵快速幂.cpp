@@ -21,7 +21,7 @@ while(N){
 }
 里面的乘号，是矩阵的运算，res是结果矩阵
 */
-#include<cslib>
+#include<cstdlib>
 #include<cstring>
 #include<cstdio>
 #include<iostream>
@@ -34,14 +34,20 @@ struct matrix{
 matrix multiply(matrix x,matrix y){
 	matrix temp;
 	memset(temp.a,0,sizeof(temp.a));
+	//cout<<"开始计算"<<endl;
 	for(int i=0;i<3;i++){
-		for(int j=0;i<3;j++)
-		{
+	//	cout<<i<<" ";
+		for(int j=0;j<3;j++){
+	//		cout<<j<<" ";
 			for(int k=0;k<3;k++){
+	//			cout<<k<<" ";
 				temp.a[i][j]+=x.a[i][k]*y.a[k][j];
+	//			//cout<<"计算结束"<<endl;
 			}
 		}
+		cout<<endl;
 	}
+	//	cout<<"计算结束"<<endl;
 	return temp;
 }
 void init(){
@@ -54,5 +60,27 @@ void init(){
 		cout<<endl;
 	}
 	cout<<endl;
-	memset(res.a,0.sizeof(res.a));
-	res.a[0][0]=res.a[1][1]}
+	memset(res.a,0,sizeof(res.a));
+	res.a[0][0]=res.a[1][1]=res.a[2][2]=1;
+}//初始化为3阶矩阵
+void calc(int n){
+	cout<<n<<"次幂的结果如下"<<endl;
+	while(n){
+		if(n&1)res=multiply(res,origin);
+		n>>=1;
+		origin=multiply(origin,origin);
+	}
+		for(int i=0;i<3;i++){
+			for(int j=0;j<3;j++)
+				printf("%8d",res.a[i][j]);
+			cout<<endl;
+		}
+		cout<<endl;
+}
+int main(){
+	while(cin>>N){
+		init();
+		calc(N);
+	}
+	return 0;
+}
