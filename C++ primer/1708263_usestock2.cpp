@@ -49,3 +49,4 @@ Stock::Stock(const std::string &co,long n=0,double pr=0.0);
 const函数
 const Stock land=Stock("K P");
 land.show();
+*/
