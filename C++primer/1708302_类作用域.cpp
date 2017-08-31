@@ -53,3 +53,30 @@ private:
 	...
 }
 这里将创建一个名为Months的常量，该常量将于其他静态变量存储在一起，而不是存储在对象中，因此，只有一个Months常量，被所有Bakery对象共享。
+作用域内枚举
+传统的枚举存在一些问题，其中之一是两个枚举定义中的枚举量可能发生冲突。假设有一个处理鸡蛋和T恤的项目，其中可能包含类似下面的这样的代码
+enum egg{Small.Medium,Large,Junbo};
+enum t_shirt{Small,Medium,Large,Xlarge};
+这将无法通过编译，因为egg small和t_shirt Small位于相同的作用域呢，它们将发生冲突。为避免这种问题，C++11提供了一种新枚举，其枚举量的作用域为类。这种枚举的声明类似与下面这样：
+enum class egg {Small,Medium,Large,Jumbo};
+enum class t_shirt{Small,Medium,Large,Xlarge};
+也可使用关键字struct代替class。无论使用哪种方式，都需要使用枚举名限定枚举变量：
+egg choice=egg::Large;
+t_shirt Floyd=t_shirt::Large;
+枚举两的作用域为类后，不同枚举定义中的枚举就不会发生名称冲突了，而您可继续编写处理鸡蛋和T恤的项目。
+C++11还提高了作用域内枚举的类型安全。在有些情况下，创归枚举将自动转换为整型，如将其赋给int变量或用与表达式时，但作用域内枚举不能隐式地转换为整型。
+enum egg_old{Small,Medium,Large,Jumbo};
+enum class t_shirt{Small,Medium,barge,Xlarge};
+egg_old one=Medium;
+t_shirt=t_shirt::larger;
+int king=Medium;//implicit type conversion for unscoped
+int ring=rolf;//not allowed,no implicit type conversion
+if(king<Jumbo)
+std::cout<<"Jumbo converted to int before comparison.\n";
+if(king<t_shirt::medium)//not allowed
+std::cout<<"Not allowed:<not defined for scpoed enum.\n";
+但在必要时，可进行显示类型转换：
+int_Frodo=int(T_shirt::Small);
+枚举用某种底层整型类型表示，在C++98中，如何选择取决于实现，因此包含枚举结构的长度可能随系统而异。对于作用域内枚举，C++11消除了这种依赖性。默认情况下，C++11作用域内枚举的底层类型为int。另外，还提供了一种语法，可用于作出不同的选择：
+enum class:short pizza{Small,Medium,Large,XLarge};
+:short将底层类型指定为short。底层类型必须为整型，在C++11中，也可使用这种语法来指定常规枚举的底层类型，但如果没有执行，编译器的底层类型将随实现而异。
