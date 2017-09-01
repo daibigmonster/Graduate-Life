@@ -1,0 +1,4 @@
+/*accept返回前连接终止
+这里，三路握手完成从连接建立以后，客户TCP却发送了一个RST（复位）。在服务器端看来。就在该连接已由TCP排队，等着服务器进程调用accept的时候RST到达。稍后，服务器进程调用accept.
+但是，如何处理中这终止的连接依赖于不同的实现。大多数SVR4实现返回一个ERPOTO的errno值，而POSIX指出返回的errno值必须是ECONNABORTED（软件引起的连接终止）
+当我们键入another line 时，str)cli调用writen,客户TCP接着把数据发送给服务器。TCP允许这么做，因为客户TCP
