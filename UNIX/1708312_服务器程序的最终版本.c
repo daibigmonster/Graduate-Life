@@ -4,13 +4,25 @@
 2当捕获信号时，必须处理被中断的系统调用;
 3SIGCHLD的信号处理函数必须正确编写，应使用waitpid函数以免留下僵死进程*/
 #include "unp.h"
-#include "1708231_str_echo函数.h"
+//#include "1708231_str_echo函数.h"
 void sig_chld(int singo){
 	pid_t pid;
 	int stat;
 	while((pid=waitpid(-1,&stat,WNOHANG))>0)
 		printf("child %d terminated\n",pid);
 	return;
+}
+void str_echo(int sockfd){
+	ssize_t n;
+	char buf[MAXLINE];
+again:
+	while((n=readline(sockfd,buf,MAXLINE))>0)
+		Writen(sockfd,buf,n);
+	if(n<0&&errno==EINTR)
+		goto again;
+	else if(n<0)
+		err_sys("str_echo:read error");
+		
 }
 int main(int argc,char **argv)
 {
