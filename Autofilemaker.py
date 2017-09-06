@@ -1,10 +1,15 @@
 import os
 import time
-content={'C1':'C++primer','C2':'Cyber-security',\
-'L':'Linux','U':'UNIX','P1':'Python','P2':'Prepare4work','T':'Test'}
+content={'C+':'C++primer','Cy':'Cyber-security',\
+'L':'Linux','U':'UNIX','Py':'Python','Pr':'Prepare4work','T':'Test'}
 source='/home/dai/Graduate-Life/'
-today=time.strftime('%Y%m%d')
-choice=input('Which content do you want to make file?(like C1,C2)')
+today=time.strftime('%y%m%d')
+while True:
+	choice=input('Which content do you want to make file?')
+	if choice in content:
+		break
+	else:
+		print('Wrong content,input again!')
 filename=input('what filename do U want to take?')
 filetype=input('What kind of file do you want?')
 
