@@ -20,7 +20,7 @@ while quit:
 	if not os.path.exists(target_dir):
 		print('Wrong content!')
 	
-	with open('/home/dai/文档/backup/countnumers','r') as file_read:
+	with open('/home/dai/Graduate_Life/backup/countnumers','r') as file_read:
 		flag=False
 		for line in file_read:
 			line=line.strip('\n')
