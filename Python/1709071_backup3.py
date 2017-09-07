@@ -6,8 +6,14 @@ if not os.path.exists(target_dir):
 	os.mkdir(target_dir)
 today=target_dir+os.sep+time.strftime('%Y%m%d')
 now=time.strftime('%H%M%S')
-commit=input('Enter a comment -->')
-target=today+os.sep+now+'.zip'
+comment=input('Enter a comment -->')
+#检查是不是由评论输入
+if len(comment)==0:
+	target=today+op.sep+now+'.zip'
+else:
+	target=today+os. sep+now+'_'+comment.replace(' ','_')+'.zip'
+#replace用下划线替换掉了注释中的空格
+#如果子目录不存在则输入一个
 if not os.path.exists(today):
 	os.mkdir(today)
 	print('Successfully created directory',today)
