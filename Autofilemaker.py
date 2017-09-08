@@ -1,7 +1,7 @@
 import os
 import time
 content={'C+':'C++primer','Cy':'Cyber-security',\
-'L':'Linux','U':'UNIX','Py':'Python','Pr':'Prepare4work','T':'Test','t':'Test'}
+'L':'Linux','U':'UNIX','Py':'Python','py':'Python','Pr':'Prepare4work','T':'Test','t':'Test'}
 source='/home/dai/Graduate-Life/'
 today=time.strftime('%y%m%d')
 quit=True
@@ -20,18 +20,18 @@ while quit:
 	if not os.path.exists(target_dir):
 		print('Wrong content!')
 	
-	with open('/home/dai/Graduate_Life/backup/countnumers','r') as file_read:
+	with open('/home/dai/Graduate-Life/Backup/countnumers','r') as file_read:
 		flag=False
 		for line in file_read:
 			line=line.strip('\n')
 			if line[:6]==today:
 				flag=True
 				count=int(line[-1])+1
-				file_add=open('/home/dai/文档/backup/countnumers','a')
+				file_add=open('/home/dai/Graduate-Life/Backup/countnumers','a')
 				file_add.write(str(count))
 				file_add.close()
 		if not flag:
-			file_add=open('/home/dai/文档/backup/countnumers','a')
+			file_add=open('/home/dai/Graduate-Life/Backup/countnumers','a')
 			newline='\n'+today+str(count)
 			file_add.write(newline)
 			file_add.close()
