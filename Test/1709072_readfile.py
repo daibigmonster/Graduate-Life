@@ -17,3 +17,4 @@ with open('/home/dai/文档/backup/countnumers','r') as file_read:
 		newline='\n'+today+'1'
 		file_add.write(newline)
 		file_add.close()
+		
