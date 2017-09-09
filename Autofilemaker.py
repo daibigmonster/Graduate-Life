@@ -23,7 +23,7 @@ while quit:
 	with open('/home/dai/Graduate-Life/Backup/countnumers','r') as file_read:
 		flag=False
 		for line in file_read:
-			line=line.strip('\n')
+			line=line.strip()
 			if line[:6]==today:
 				flag=True
 				count=int(line[-1])+1
