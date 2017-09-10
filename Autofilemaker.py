@@ -27,11 +27,13 @@ while quit:
 	cur.execute('select * from user where date=?',(today,))
 	values=cur.fetchall()
 	if values==[]:
-		cur.execute('insert into user (date,num) values (?,?)',(today,1))
-		ptint('We have created a rocord which date={0},num={1}'.format(today,1))
+		fileallname=today+str(count)+'_'+filename+filetype
+		cur.execute('insert into user (date,num,filename) values (?,?,?)',(today,count,fileallname))
+		ptint('We have created a rocord which date={0},num={1}'.format(today,count))
 	else:
 		count=values[0][1]+1
-		cur.execute('update user set num=? where date=?',(count,today))
+		fileallname=today+str(count)+'_'+filename+filetype
+		cur.execute('update user set num=?,filename=? where date=?',(count,fileallname,today))
 		print('We have update a rocord which date={0},num={1}'.format(today,count))
 	cur.close()
 	conn.commit()
@@ -55,7 +57,7 @@ while quit:
 
 
 
-	fileallname=today+str(count)+'_'+filename+filetype
+#	fileallname=today+str(count)+'_'+filename+filetype
 	target=target_dir+os.sep+fileallname
 	file_command='vi {}'.format(target)
 	if os.system(file_command)==0:
