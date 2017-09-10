@@ -1,7 +1,9 @@
 import os
 import time
+import sqlite3
 content={'C+':'C++primer','Cy':'Cyber-security',\
-'L':'Linux','U':'UNIX','Py':'Python','py':'Python','Pr':'Prepare4work','T':'Test','t':'Test'}
+'L':'Linux','U':'UNIX','Py':'Python','py':'Python','Pr':'Prepare4work',\
+'T':'Test','t':'Test'}
 source='/home/dai/Graduate-Life/'
 today=time.strftime('%y%m%d')
 quit=True
@@ -19,22 +21,37 @@ while quit:
 	target_dir=source+content[choice]
 	if not os.path.exists(target_dir):
 		print('Wrong content!')
-	
-	with open('/home/dai/Graduate-Life/Backup/countnumers','r') as file_read:
-		flag=False
-		for line in file_read:
-			line=line.strip()
-			if line[:6]==today:
-				flag=True
-				count=int(line[-1])+1
-				file_add=open('/home/dai/Graduate-Life/Backup/countnumers','a')
-				file_add.write(str(count))
-				file_add.close()
-		if not flag:
-			file_add=open('/home/dai/Graduate-Life/Backup/countnumers','a')
-			newline='\n'+today+str(count)
-			file_add.write(newline)
-			file_add.close()
+    
+	conn=sqlite3.connect('/home/dai/Graduate-Life/Backup/countnum.db')
+	cur=conn.cursor()
+	cur.execute('select * from user where date=?',(today,))
+	values=cur.fetchall()
+	if values==[]:
+		cur.execute('insert into user (date,num) values (?,?)',(today,1))
+		ptint('We have created a rocord which date={0},num={1}'.format(today,1))
+	else:
+		count=values[0][1]+1
+		cur.execute('update user set num=? where date=?',(count,today))
+		print('We have update a rocord which date={0},num={1}'.format(today,count))
+	cur.close()
+	conn.commit()
+	conn.close()
+
+#	with open('/home/dai/Graduate-Life/Backup/countnumers','r') as file_read:
+#		flag=False
+#		for line in file_read:
+#			line=line.strip()
+#			if line[:6]==today:
+#				flag=True
+#				count=int(line[-1])+1
+#				file_add=open('/home/dai/Graduate-Life/Backup/countnumers','a')
+#				file_add.write(str(count))
+#				file_add.close()
+#		if not flag:
+#			file_add=open('/home/dai/Graduate-Life/Backup/countnumers','a')
+#			newline='\n'+today+str(count)
+#			file_add.write(newline)
+#			file_add.close()
 
 
 
