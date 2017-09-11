@@ -29,7 +29,7 @@ while quit:
 	if values==[]:
 		fileallname=today+str(count)+'_'+filename+filetype
 		cur.execute('insert into user (date,num,filename) values (?,?,?)',(today,count,fileallname))
-		ptint('We have created a rocord which date={0},num={1}'.format(today,count))
+		print('We have created a rocord which date={0},num={1}'.format(today,count))
 	else:
 		count=values[0][1]+1
 		fileallname=today+str(count)+'_'+filename+filetype
