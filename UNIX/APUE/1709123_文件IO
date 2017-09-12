@@ -17,3 +17,33 @@ O_RDWR
 O_EXEC
 O_SEARCH
 
+fd参数把open和openat函数区分开，共有三种可能行
+1path参数制定的是绝对路径名，在这种情况下，fd参数被忽略，openat函数相当于open函数
+2path参数制定的是相对路径名，fd参数指出了相对路径名在文件系统中的开始地址。fd参数是tongue相对路径名所在的目录来获取
+3path参数指定了相对路径名，fd参数具有特殊值AT_FDCWD。在这种请乱搞下，路径名在当前工作目录中获取，openat函数在操作上与open函数类似。
+openat函数是POSIX.1新版本中新增的一类函数之一，希望解决两个问题。第一，让线程可以使用相对路径名打开目录中的文件，而不再只能打开当前的工作目录。在后面我们会看到，同一进程中的所有进程共享当前的工作目录，因此很难让同一个进程的多个不同线程的同一时间工作在不同的目录中。
+
+函数creat
+也可以调用creat函数创建一个新文件
+#include <fcntl.h>
+int creat(const char* path,mode_t mode);
+注意，次函数等效于：
+open(path,O_WRONLY|O_CREAT|O_TRUNC,mode)
+在4.5节，我们将详细说明文件访问权限，并说明如何制定mode
+creat的一个不足之处是它以只写的方式打开创建的文件。在提供open的新版本之前，如果要创建一个新的临时文件，并要先写该文件，然后又读该文件，则必须先调用creat、close,然后再调用open。现在则可用调用opne实现
+open(path,O_RDWR|O_CREAT|O_TRUNC,mode);
+
+函数lseek
+每个打开文件都有一个与其相关联的“当前文件偏移量”（current file offset）。它通常是一个非负整数，用以度量从文件开始出计算的字节数。通常，读写操作都从当前文件偏移量出开始，并使偏移量增加读写的字节数。
+按系统默认的情况，当打开一个文件时，除非制定O_APPEND选项，否则偏移量被设置为0
+可以调用lseek显示地为打开文件设置偏移量
+#incldue <unistd.h>
+off_t lseek(int fd,off_t offset,int whence);
+对参数offset的解释与参数whence的值有段
+若whence是SEEK_SET，则将该文件的偏移量设置为距文件开始处offset个字节
+若whence是SEEK_CUR,则将该文件的偏移量设置为当前值加offset，offset可为正或负。
+若whence是SEEK——END，则将该文件的偏移量设置为文件长度加offset,offset可正可负
+若lseek成功执行，则返回新的文件偏移量，为此可以用下列方式确定打开文件的当前偏移量：
+off_t currpos;
+currpos=lseek(fd,0,SEEK_CUR);
+这种方法也可以用来确定所涉及的文件是否可以设置偏移量。如果文件描述负指向的是一个管道、FIFO或网络套结字，则lseek返回-1,并将errno设置为ESPIPE。
