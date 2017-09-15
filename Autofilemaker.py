@@ -2,8 +2,8 @@ import os
 import time
 import sqlite3
 content={'A':'UNIX/APUE','a':'UNIX/APUE','c':'C++primer','Cy':'Cyber-security',\
-'L':'Linux','U':'UNIX','Py':'Python','py':'Python','Pr':'Prepare4work',\
-'T':'Test','t':'Test'}
+        'L':'Linux','U':'UNIX','Py':'Python','py':'Python','Pr':'Prepare4work','s':'Spider-python'\
+,'T':'Test','t':'Test'}
 source='/home/dai/Graduate-Life/'
 today=time.strftime('%y%m%d')
 quit=True
