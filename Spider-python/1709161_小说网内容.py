@@ -11,6 +11,8 @@ def get_one_page(url):
 def parse_one_page(html):
     pattern=re.compile('<dd>.*?href="(.*?)">(.*?)</a></dd>',re.S)
     items=re.findall(pattern,html)
+	for item in items:
+		print(item[1])
     for item in items:
          yield {
             '网址': item[0],
