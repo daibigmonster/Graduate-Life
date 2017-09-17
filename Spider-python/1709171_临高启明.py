@@ -3,14 +3,12 @@ import re
 import sqlite3
 import time
 import os
-import socket
 
 def get_one_page(url):
-    response = requests.get(url,timeout=10)
+    response = requests.get(url)
     if response.status_code == 200:
         return response.text
-    else:
-    	print('超时！')
+    return None
 
 def make_list(html):
 	base_url='http://www.xs.la'
@@ -44,20 +42,6 @@ def parse_one_page(bookpath,sourcecode):
 #    items=re.sub('<br/>.*?<br/>','',items)	
 	with open(bookpath, 'w') as f:
 		f.write(content)
-
-def download(noveldir,values):
-	count=0
-	for item in values:
-		count+=1
-		bookpath='{0}/{1} {2}.txt'.format(noveldir,str(count),item[0])
-		if  os.path.exists(bookpath):
-			print(bookpath,'已经存在，略过')
-		else:
-			print(bookpath,'正在下载')
-			sourcecode=get_one_page(item[1])
-			parse_one_page(bookpath,sourcecode)
-			time.sleep(1)
-	
 			
 def main():
 	noveldir=input('Which content do you want to download novel?')
@@ -67,7 +51,19 @@ def main():
 	first_url='http://www.xs.la/1_1212/'#小说的首页，从首页就可以抓取目录
 	sourcecode=get_one_page(first_url)
 	values=make_list(sourcecode)
-	download(noveldir,values)
+#	print(novelname)
+	count=0
+	for item in values:
+		count+=1
+#		print(item[0],item[1])
+		bookpath='{0}/{1} {2}.txt'.format(noveldir,str(count),item[0])
+		if  os.path.exists(bookpath):
+			print(bookpath,'已经存在，略过')
+		else:
+			print(bookpath,'正在下载')
+			sourcecode=get_one_page(item[1])
+			parse_one_page(bookpath,sourcecode)
+			time.sleep(1)
 			
 
 main()

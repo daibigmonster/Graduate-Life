@@ -36,6 +36,16 @@ def make_list(html):
 	conn.close()
 	return values
 
+def get_list(novelname):
+	conn=sqlite3.connect('/home/dai/Graduate-Life/Backup/countnum.db')
+	cur=conn.cursor()
+	cur.execute('select * from 异常生物见闻录')#需要改成小说名字
+	values=cur.fetchall()
+	cur.close()
+	conn.commit()
+	conn.close()
+	return values
+
 def parse_one_page(bookpath,sourcecode):
 #	print(bookpath)
 	sourcecode=re.sub('<br/>.*?<br/>|<script.*?></script>','',sourcecode)
@@ -47,14 +57,17 @@ def parse_one_page(bookpath,sourcecode):
 		f.write(content)
 			
 def main():
-	noveldir=input('Which content do you want to download novel?')
-	noveldir='/home/dai/文档/'+noveldir
+	novelname=input('Which content do you want to download novel?')
+	noveldir='/home/dai/文档/'+novelname
 	if not os.path.exists(noveldir):
 		os.system('mkdir {}'.format(noveldir))
-	first_url='http://www.xs.la/3_3271/'#小说的首页，从首页就可以抓取目录
-	sourcecode=get_one_page(first_url)
-	values=make_list(sourcecode)
+		first_url='http://www.xs.la/3_3271/'#小说的首页，从首页就可以抓取目录
+		sourcecode=get_one_page(first_url)
+		values=make_list(sourcecode)
 #	print(novelname)
+	else:
+		values=get_list(novelname)
+		
 	count=0
 	for item in values:
 		count+=1
@@ -66,7 +79,7 @@ def main():
 			print(bookpath,'正在下载')
 			sourcecode=get_one_page(item[1])
 			parse_one_page(bookpath,sourcecode)
-			time.sleep(1)
+			time.sleep(0.5)
 			
 
 main()
