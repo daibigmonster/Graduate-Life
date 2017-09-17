@@ -35,21 +35,20 @@ def make_list(html):
 	return values
 
 def parse_one_page(bookpath,sourcecode):
-	print(bookpath)
+#	print(bookpath)
 	sourcecode=re.sub('<br/>.*?<br/>|<script.*?></script>','',sourcecode)
 	pattern=re.compile('<div.*?id="content">(.*?)</div>',re.S)
 	items=re.findall(pattern,sourcecode)
 	content=items[0].replace('&nbsp;&nbsp;&nbsp;&nbsp;','\n\t')
 #    items=re.sub('<br/>.*?<br/>','',items)	
-	with open('{}.txt'.format(bookpath), 'w') as f:
+	with open(bookpath, 'w') as f:
 		f.write(content)
 			
 def main():
-	novelname=input('Which content do you want to download novel?')
-	if not novelname==None:
-		novelname='/home/dai/文档/'+novelname
-		if not os.path.exists(novelname):
-			os.system('mkdir {}'.format(novelname))
+	noveldir=input('Which content do you want to download novel?')
+	noveldir='/home/dai/文档/'+noveldir
+	if not os.path.exists(noveldir):
+		os.system('mkdir {}'.format(noveldir))
 	first_url='http://www.xs.la/3_3271/'#小说的首页，从首页就可以抓取目录
 	sourcecode=get_one_page(first_url)
 	values=make_list(sourcecode)
@@ -58,13 +57,16 @@ def main():
 	for item in values:
 		count+=1
 #		print(item[0],item[1])
-		bookpath=novelname+'/'+str(count)+' '+item[0]
-		if not os.path.exists(bookpath):
+		bookpath='{0}/{1} {2}.txt'.format(noveldir,str(count),item[0])
+		if  os.path.exists(bookpath):
+			print(bookpath,'已经存在，略过')
+		else:
+			print(bookpath,'正在下载')
 			sourcecode=get_one_page(item[1])
 			parse_one_page(bookpath,sourcecode)
-			time.sleep(0.1)
-		else:
-			pass
+			time.sleep(0.2)
+			
 
 main()
+
 
