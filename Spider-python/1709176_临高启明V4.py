@@ -40,7 +40,7 @@ def make_list(html):
 	conn.commit()
 	conn.close()
 	return values
-
+'''
 def get_list(novelname):
 	conn=sqlite3.connect('/home/dai/Graduate-Life/Backup/countnum.db')
 	cur=conn.cursor()
@@ -50,7 +50,7 @@ def get_list(novelname):
 	conn.commit()
 	conn.close()
 	return values
-
+'''
 def parse_one_page(bookpath,sourcecode):
 #	print(bookpath)
 	sourcecode=re.sub('<br/>.*?<br/>|<script.*?></script>','',sourcecode)
@@ -66,12 +66,12 @@ def main():
 	noveldir='/home/dai/文档/'+novelname
 	if not os.path.exists(noveldir):
 		os.system('mkdir {}'.format(noveldir))
-		first_url='http://www.xs.la/1_1212/'#小说的首页，从首页就可以抓取目录
-		sourcecode=get_one_page(first_url)
-		values=make_list(sourcecode)
+	first_url='http://www.xs.la/1_1212/'#小说的首页，从首页就可以抓取目录
+	sourcecode=get_one_page(first_url)
+	values=make_list(sourcecode)
 #	print(novelname)
-	else:
-		values=get_list(novelname)
+#	else:
+#		values=get_list(novelname)
 		
 	count=0
 	for item in values:
