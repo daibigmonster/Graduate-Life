@@ -31,7 +31,7 @@ Stonewt::operator int() const
 {
 	return int(pounds+0.5);
 }
-Stonewt::operator double()const;
+Stonewt::operator double()const
 {
 	return pounds;
 }

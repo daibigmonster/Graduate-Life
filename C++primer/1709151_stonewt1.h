@@ -14,7 +14,7 @@ public:
 	Stonewt();
 	~Stonewt();
 	void show_lbs()const;
-	void show_stn()const;]
+	void show_stn()const;
 	operator int() const;
 	operator double() const;
 
