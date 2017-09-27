@@ -62,7 +62,7 @@ def parse_one_page(bookpath,sourcecode):
 		f.write(content)
 			
 def main():
-	novelname=input('Which content do you want to download novel?')
+	novelname="临高启明"#小说的名字
 	noveldir='/home/dai/文档/'+novelname
 	if not os.path.exists(noveldir):
 		os.system('mkdir {}'.format(noveldir))
