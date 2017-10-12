@@ -41,3 +41,20 @@
  callme2(headline2);
 
  *
+ * 12.1.4Stringbad的其他问题：赋值运算符 
+ * 并不是程序清单12.3的所有问题都可以归咎于默认的赋值构造函数，还需要看一看默认的赋值运算符。ANSI C允许机构赋值，而C++允许对象赋值，这是通过自动为类重载赋值运算符实现的，这种运算符的原型如下：
+ * Class_name & Class_name::operator = (const Class_name &);
+ * 它接受并返回一个指向类对象的引用。例如,StringBad类的赋值运算符的原型如下：
+ * StringBad & String id::operator = (const StringBad &)
+ * 1赋值运算符的功能以及何时使用它
+ * 将已有的对象赋给另一个对象时，将使用重载的赋值运算符：
+ * StringBad headline("Hello World!");
+ * ...
+ * StringBad knot;
+ * knot = headline1;
+ * 初始化对象时，并不一定会使用赋值运算符：
+ * StringBad metoo = knot;//use copy constructor,possibly assignment,too
+ * 这里，metoo是一个新创建的对象，被初始化为knot的值，因此使用复制构造函数。然而，正如前面指出的，实现时也可能分成两步来处理这条语句
+：使用复制构造函数创建一个临时对象，然后通过赋值将临时对象的值复制到新对象中。这就是说，初始化总是会调用复制构造函数，而使用=运算符也可能调用赋值运算符。
+ *
+ *
