@@ -59,6 +59,63 @@
  * 如果使用默认的静态联编，delete语句间调用~Employee()析构函数。这将释放由Singer对象中的Employee部分指向的内存，但不会释放
  * 新的类成员指向的内存。但如果析构函数是虚的，则上述代码先调用~Singer()析构韩式释放由Singer组件组向的内存，
  * 然后调用~Employee()函数类释放由Employee组件指向的内存。
- * 这意味着，即使接力不需要显式析构函数提供服务，也不应依赖于默认构造函数，而应提供虚析构函数，即使它不执行任何操作
+ * 这意味着，即使基类不需要显式析构函数提供服务，也不应依赖于默认构造函数，而应提供虚析构函数，即使它不执行任何操作
+ * virtual ~BassClass(){}
  *
+ * 3友元
+ * 友元不能是虚函数，因为友元不是类成员，而只有成员才能是虚函数。如果这个原因引起了设计问题，可以通过让友元函数使用虚成员函数来解决
+ *
+ * 4没有重新定义
+ * 如果派生类没有重新定义函数，将使用该函数的基类版本。如果派生类位于派生链中，则将使用最新函数的虚函数版本
+ *
+ * 5重新定义将隐藏方法
+ * 假设创建了如下所示的代码
+ * class Dwelling
+ * {
+ * public:
+ * 	virtual void showperks(int a) const;
+ * };
+ * class Hovel : public Dwelling
+ * {
+ * public:
+ * 	virtual void showperks() const;
+ * }
+ * 这将导致问题，可能会出现警告
+ * Hovel trump;
+ * trump.showperks();//valid
+ * trump.showperks(5);//invalid
+ * 新定义将showperks()定义为一个不接受任何参数的函数。重新定义不会生成函数的重载版本，而是隐藏了接受一个int参数的版本。
+ * 总之，重新定义继承的方法并不是重载。如果在派生类中重新定义函数，将不是使用相同的函数特征覆盖基类声明，而是隐藏同名的基类方法，
+ * 不管参数特征标如何
+ * 这引出了两天经验规则：第一，如果重新定义继承的方法，应确保与原来的原型完全相同，但如果返回类型是基类引用或者指针，
+ * 则可以修改为指向派生类的引用或指针。这种特性被称为返回类型协变，因为允许返回类型随类类型的变化而变化
+ * class Dwelling
+ * {
+ * public:
+ *     virtual Dewlling & build(int n);
+ * };
+ * class Hovel : public Dewlling
+ * {
+ * public:
+ * 	   virtual Hovel & build(int);
+ * }
+ * 注意：这种例外只适用于返回值，而不适用于参数
+ *
+ * 第二，如果基类声明被重载了，则应在派生类中重新定义所有基类版本。
+ * class Dwelling
+ * {
+ * public:
+ * 	   virtual void showperks(int a)const;
+ * 	   virtual void showperks(double x)const;
+ * 	   virtual void showperks()const;
+ * }；
+ * class Hovel : public Dwelling
+ * {
+ * public:
+ * 	   virtual void showperks(int a)const;
+ * 	   virtual void showperks(double x)const;
+ * 	   virtual void showperks()const;
+ * }
+ * 如果只重新定义一个版本，在另外两个版本将被隐藏，派生类对象将无法使用它们。注意，如果不需要修改，则新定义可只调用基类版本：
+ * void Hovle::showperks const {Dwelling::showperks();}
  */
