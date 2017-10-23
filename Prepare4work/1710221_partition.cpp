@@ -18,7 +18,6 @@ public:
             cur = cur->next;
         }
 
-        int length = List.size();
         cur = forehead;
         for(auto i : List){
             if(i->val < x){

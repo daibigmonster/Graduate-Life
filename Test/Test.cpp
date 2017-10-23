@@ -1,5 +1,6 @@
 #include "Test.h"
 #include <iostream>
+#include <stdlib.h>
 using namespace std;
 
 void ConnectListNodes(ListNode *cur,ListNode *next){
@@ -7,7 +8,7 @@ void ConnectListNodes(ListNode *cur,ListNode *next){
 		cout << "This Node is null" << endl;
 		exit(1);
 	}
-	cur->next = next;
+	cur->next = next;  
 }
 
 void PrintList(ListNode *head){
