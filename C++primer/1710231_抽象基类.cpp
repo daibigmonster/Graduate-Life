@@ -22,12 +22,72 @@
  * 	   virtual double Area() const = 0;
  * }
  * 当类声明中包含纯虚函数时，则不能创建该类的对象。这里的理念是，包含纯虚函数的类只能用作基类。要成为真正的ABC，
- * 必须至少包含一个纯虚函数。原型中的=0使虚函数称为春旭函数。这里的方法Area()没有定义,但C++甚至允许纯虚函数有定义。
+ * 必须至少包含一个纯虚函数。原型中的=0使虚函数称为纯虚函数。这里的方法Area()没有定义,但C++甚至允许纯虚函数有定义。
  * 例如，也许所有的基类方法都与Move()一样，可以在基类中进行定义，但您扔需要将这个类声明为抽象的。在这种情况下，可以将原型声明为
  * 虚的：
  * void Move(int nx,ny) = 0;
  * 这将使基类称为抽象的，但您仍可以在实现文件中提供方法的定义：
  * Void BaseEllipse::Move(int nx,ny){x = nx ; y = ny;}
  * 总之，在原型中使用=0指出类是一个抽象基类，在类中可以不定义该函数。
- * 现在，可以从BaseEllipse类派生出
+ * 现在，可以从BaseEllipse类派生出Ellipse对象和Circle对象，但是不能创建BaseEllipse对象。由于Circle和Ellipse对象的基类相同
+ * 因此可以使用BaseEllipse指针数组同时管理这两种对象。像Circle和Ellipse这样的类有事被称为具体类，这表示，可以创建这些类的对象。
+ * 总之，ABC描述的是至少使用一个纯虚函数的接口，从ABC派生出的类将根据派生类的具体特征使用常规虚函数来实现这种接口。
+ *
  */
+#include <iostream>
+#include "1710241_acctabc.h"
+using std::cout;
+using std::endl;
+using std::ios_base;
+using std::string;
+
+AcctABC::AcctABC(const string & s,long an,double bal)
+{
+	fullName = s;
+	acctNum = an;
+	balance = bal;
+}
+
+void AcctABC::Deposit(double amt)
+{
+	if(amt < 0)
+		cout << "Negative deposit not allowed; "
+			<< "deposit is cancelled.\n";
+}
+
+void AcctABC::Withdraw(double amt){
+	balance -= amt;
+}
+
+
+AcctABC::Formatting AcctABC::SetFormat() const{
+	//set up ###.## format
+	Formatting f;
+	f.flag = cout.setf(ios_base::fixed,ios_base::floatfield);
+	f.pr = cout.precision(2);
+	return f;
+}
+
+void AcctABC::Restore(Formatting & f) const{
+	cout.setf(f.flag,ios_base::floatfield);
+	cout.precision(f.pr);
+}
+
+//Brass methods
+void Brass::Withdraw(double amt){
+	if(amt < 0)
+		cout << "Withdrawal amount must be be positive;"
+		     << "withdrawal canceled.\n";
+	else if (amt <= balance())
+		AcctABC::Withdraw(amt);
+	else
+		cout << "Withdrawal amount of $" << amt
+			<<" exceeds your balance.\n"
+			<<"Withdrawal canceled.\n";
+}
+
+void Brass::ViewAcct() const{
+	Formatting f = SetFormat();
+	cout << "Brass Client: " << FullName() << endl;
+	cout << "Account Number: " << AcctNum() << endl;
+}
