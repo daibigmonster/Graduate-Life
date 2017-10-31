@@ -53,6 +53,8 @@ void AcctABC::Deposit(double amt)
 	if(amt < 0)
 		cout << "Negative deposit not allowed; "
 			<< "deposit is cancelled.\n";
+	else
+		balance += amt;
 }
 
 void AcctABC::Withdraw(double amt){
@@ -78,7 +80,7 @@ void Brass::Withdraw(double amt){
 	if(amt < 0)
 		cout << "Withdrawal amount must be be positive;"
 		     << "withdrawal canceled.\n";
-	else if (amt <= balance())
+	else if (amt <= Balance())
 		AcctABC::Withdraw(amt);
 	else
 		cout << "Withdrawal amount of $" << amt
@@ -90,4 +92,54 @@ void Brass::ViewAcct() const{
 	Formatting f = SetFormat();
 	cout << "Brass Client: " << FullName() << endl;
 	cout << "Account Number: " << AcctNum() << endl;
+	cout << "Balance: $ " << Balance() << endl;
+	Restore(f);
 }
+
+BrassPlus::BrassPlus(const string & s,long an,double bal,double ml,double r) : AcctABC(s,an,bal){
+	maxLoan = ml;
+	owesBank = 0.0;
+	rate = r;
+}
+
+BrassPlus::BrassPlus(const Brass & ba,double ml,double r) : AcctABC(ba)//use implicit copy constructor
+{
+	maxLoan = ml;
+	owesBank = 0.0;
+	rate = r;
+}
+
+void BrassPlus::ViewAcct() const{
+	Formatting f = SetFormat();
+	cout << "BrassPlus Client: " << FullName() << endl;
+	cout << "Account Number: " << AcctNum() << endl;
+	cout << "Balance: $" << Balance() << endl;
+	cout << "Maximum loan: $" << maxLoan << endl;
+	cout << "Owed to bank: $" << owesBank << endl;
+	cout.precision(3);
+	cout << "Loan Rate: " << 100 * rate << "%\n";
+	Restore(f);
+}
+
+void BrassPlus::Withdraw(double amt){
+	Formatting f = SetFormat();
+
+	double bal = Balance();
+	if(amt <= bal) AcctABC::Withdraw(amt);
+	else if( amt <= bal + maxLoan - owesBank){
+		double advance = amt - bal;
+		owesBank += advance * (1.0 + rate);
+		cout << "Bank advance : $" << advance << endl;
+		cout << "Finance charge: $" << advance * rate << endl;
+		Deposit(advance);
+		AcctABC::Withdraw(amt);
+	}
+	else
+		cout << "Credit limit exceeded.Transaction cancelled.\n";
+	Restore(f);
+}
+
+/*
+ * 保护方法FullName()和AcctNum()提供了对数据成员fullname和acctNum的只读访问，使得可以进一步定制每个派生类的ViewAcct().
+ * 这个版本在设置输出格式方面做了两项改进。前一个版本使用两个函数来调用来设置输出格式，并使用一个函数调用来恢复格式
+ */

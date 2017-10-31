@@ -35,6 +35,9 @@ public:
 	virtual void ViewAcct() const = 0;
 	virtual ~AcctABC() {};
 };
+
+
+
 class Brass : public AcctABC
 {
 public:
@@ -43,6 +46,8 @@ public:
 	virtual void ViewAcct() const;
 	virtual ~Brass() {};
 };
+
+
 
 class BrassPlus : public AcctABC
 {
