@@ -29,8 +29,10 @@ int main(int argc,char *argv[])
 	ssize_t numRead;
 	char buf[BUF_SIZE];
 
-	if(argc !=3 || strcmp(argv[1], "--help") == 0)
-		printf("%s old-file new-file\n",argv[0]);
+	if(argc !=3 || strcmp(argv[1], "--help") == 0){
+		fprintf(stderr,"%s old-file new-file\n",argv[0]);
+		exit(0);
+	}
 //	Open input and output files
 	inputFd = open(argv[1],O_RDONLY);
 	if(inputFd == -1)
