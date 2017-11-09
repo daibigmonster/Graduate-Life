@@ -1,0 +1,14 @@
+struct timeval { 
+__kernel_time_t tv_sec; /* seconds */ 
+__kernel_suseconds_t tv_usec; /* microseconds */ 
+};
+struct pcap_pkthdr//该文件为16字节
+{
+    struct timeval ts;  /* time stamp */
+    u_int32_t caplen; /* length of portion present */
+    u_int32_t len;    /* length this packet (off wire) */
+};
+地址转换操作：
+cout<<"IP源地址："<<inet_ntoa(*((in_addr *)&(iph->src_ip)))<<endl;
+端口转换操作：
+uh->dport=ntohs(uh->dport);

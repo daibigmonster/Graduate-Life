@@ -1,0 +1,410 @@
+地址转换函数在地址的文本表达和它们存放在套接字地址结构的二进制值之间进行转换。多数现存的IP4代码使用inet_addr和inet_ntoa这两个函数，不过这两个新函数inet_pton和inet_ntop同时适用于ip4和ip6两种代码
+
+大多数套接字函数都需要一个指向套接字地址结构的指针作为参数。每个协议族都定义它自己的套接字地址结构。这些结构的名字均以sockaddr_开头，并以对应每个协议族的唯一后缀结尾。
+
+IP4套接字地址结构
+IP4套接字地址结构通常也被称为“网际套接字地址就诶够”，它以scokaddr——in命名，定义在<netinet/in.h>头文件中
+struct in_addr
+{
+in_addr_t s_addr;
+};
+struct sockaddr_in
+{
+uint8_t     sin_len;
+sa_family_t sin_family;
+int_port_t  sin_port;
+struct in_addr sin_addr;
+char        sin_zero(8);
+};
+我们对套接字地址结构做几点一般性的说明。
+长度字段sin_len是为增加OSI协议的支持而随××××添加的。在此之前，第一个成员是sin_family,它是一个无符号短整数。并不是所有的厂家都支持套接字地址结构的长度字段。而求POSIX规范也不要求有这个成员。
+即使由长度则端，我们也无序设置和检查它，除非设计路由套接字。它是由处理来自不同协议族的套接字结构的例程（录入路由表处理代码）在内核中使用的。
+POSIX规范只需要这个结构的3个字段：sin_family,sin_addr和sin_port。对于符合POSIX的实现来说，定义额外的结构字段是可以接受的，这对于网际套接字地址结构来说也是正常的。几乎所有的实现都增加了sin_zero字段，所以所有的套接字地址结构大小都至少是16字节。
+
+我们给出了字段s_addr、sin_family和sin_port的POSIX数据类型。in_addr_t数据类型必须是一个至少32位的无符号整数类型，in_port_t必须是一个至少16位的无符号整数类型，而sa_family_t可以是任何无符号整数类型。在支持长度字段的实现中，sa_family_t通常是一个8为的无符号整数，而在不支持长度字段的实现中，它则是一个16位的无符号整数。下图列出了POSIX定义的这些数据类型以及后面将会遇到的其他POSIX数据类型。
+POSIX规范要求的数据类型        头文件
+int8_t 带符号的8位整数         <sys/types.h>
+uint8_t 无符号的8位整数
+int16_t 带符号的16位整数
+uint16_t 无符号的16位整数
+int32_t 带符号的32位整数
+uint32_t 无符号的32位整数
+
+sa_family_t 套接字地址结构的地址族  <sys/scoket.h>
+socklen_t 套接字地址结构的长度，一般为uint32_t
+
+inaddr_t IP4地址，一般为uint32_t  <netinet/in.h>
+我们还将遇到数据类型u_char、u_short、u_int和u_long,它们都是无符号的。POSIX规范定义这些类型时特地标记它们已过时，仅是为向后兼容差提供的
+
+IP4地址和TCP或UDP端口号在套接字地址结构中总是以网络字节序来存储。在使用这些字段时，必须注意。
+32位IP4地址存在两种不同的访问方法。举例来说，如果serv定义为某个网际套接字地址结构，那么serv.sin_addr将按in_addr结构引用其中的32位IP4地址，而serv.sin_addr.s_addr将按in_addr_t(通常是agiel无符号的32位整数)引用同一个32位IP4地址。因此，我们必须正确地使用IP4地址，尤其是将它作为函数的参数时，因为编译器对传递结构和传递函数的处理是完全不同的。
+sin_zero字段未曾使用，不过在填写这种套接字地址结构时，我们总是把盖子端设置为0.
+
+通用套接字地址结构
+当座位一个参数传递进任何套接字函数时，套接字地址结构总是以引用形式（也就是指向该结构的指针）来传递。然而以这样的指针作为参数之一的任何套接字函数必须处理来自所支持的任何协议族的套接字地址结构。
+在如何声明所传递指针的数据类型上存在一个问题。
+于是套接字函数被定义为指向某个通用套接字地址结构的一个指针作为其参数之一，这正如bind函数的ANSI C函数原型所示：
+int bind(int,struct socckaddr *,socklen_t)
+这就要求对这些函数的任何调用都必须要将指向特定于协议的套接字地址结构的指针进行类型强制转换，编程指向某个通用套接字地址结构的指针，例如：
+struct sockaddr_in serv;
+bind(sockfd,(struct sockaddr *)&serv,sizeof(serv));
+如果我们省略了其中的类型强制转换部分“（struct socketaddr *）”,并假设系统的头文件中有bind函数的一个ANSI C原型，那么C编译器就会产生这样的警告信息：（警告：把不兼容的指针类型传递给bind函数第二个函数）
+从应用开发人员的观点看，这些通用套接字地址的唯一用途就是对指向特定于协议套接字地址结构的执行执行强制转换
+
+IP6套接字地址结构
+struct in6_addr{
+unint8_t s6_addr[16]//16字节的IP6地址
+}
+#define SIN6_LEN;
+struct sockaddr_in6
+{
+uint8_t sin6_len;
+sa_family_t sin6_family;
+in_port_t sin6_port;
+uint32_t sin6_flowinfo;
+struct in6_addr;
+uint32_t sin6_scopr_id;
+}
+如果系统支持套接字地址结构中的长度字段，那么SIN6_LEN常值必须定义
+IP6的地址族是AF_INET6,而IP4的地址族是AF_INET
+结构中字段的先后顺序做过编排，使得如果sockaddr_in6结构本身是64位对齐的，那么128位的sin6_addr字段也是64位对齐的。在一些64为处理机上，如果64位数据存储在某个64位边界位置，那么对它的访问将得到优化处理。
+sin6_flowinfo字段分成两个字段
+对于具备范围的地址，sin6_scope_id字段标识其范围，最常见的是链路局部地址的接口索引。
+
+新的通用套接字地址结构
+作为IP6套接字API的一部分而定义的新的通用套接字地址克服了现有struct sockaddr的一些缺点。不像struct sockaddr，新的struct sockaddr_storage足以容纳系统所支持的任何套接字地址结构。
+sockaddr_storage结构在<netinet/in.h>头文件中定义
+struct sockaddr_storage
+{
+uint8_t ss_len;//length of this struct
+sa_family_t ss_family
+}
+
+sockaddr_storage类型提供的通用套接字地址结构相比sockaddr存在以下两点差别
+1如果系统支持的任何套接字地址结构有对齐需要，那么sockaddr_storage能够满足最苛刻的对齐要求
+2sockaddr_storage足够大，能够容纳系统支持的任何套接字地址结构。
+注意，除了ss_family和ss_len外（如果有的话），socket_storage结构中的其他字段对于用户来说是透明的。socket_storage结构必须类型强制转换成或复制到适合与ss_family字段所给出地址类型的套接字地址结构中，才能访问其他字段。
+
+套接字地址结构比较
+我们对本书遇到的5种套接字地址结构进行了比较IP4 IP6、Unix域、数据连接和存储。在该图中，我们假设所有套接字地址结构都包含一个单字节的长度字段，地址族字段也占用一个字节，其他字段都占用确切的最短长度。
+前两种套接字地址结构是固定长度的，而UNIX域和数据链路结构是可变长度的，为了处理长度可变结构，当我们把指向某个套接字地址结构的指针作为一个参数传递给某个套接字函数时。也把该结构的长度作为另一个参数传递给这个函数。我们在每种长度固定的结构下方给出了这种结构的字节数长度.
+sockaddr_un结构本身并非长度可变的，但是其中的信息（即结构中的路径名）却是长度可变的。当传递指向这些结构的指针时，我们必须小心处理长度字段，包括套接字地址结构本身的长度字段（如果其实现支持此字段），以及作为参数传递给内核或从内核返回长度。
+
+值-结果参数
+我们提到过，当一个套接字函数传递一个套接字地址结构时，该结构总是以引用形式来传递，也就是说传递的是指向该结构的一个指针，该结构的长度也作为一个参数来传递，不过其传递方式取决于该结构的传递方向：是从进程到内核，还是从内核到进程。
+1从进程到内核传递套接字地址结构的函数由3个：bing、connect和sendto.这些函数的一个参数是从指向某个套接字地址结构的指针，另一个参数是该结构的整数大小，例如：
+struct sockaddr_in serv:
+connect(sockfd,(sa *)&serv,sizeof(serv))
+既然指针和指针的内容的大小都传递给了内核，于是内核直到到底需从进程复制多少数据进来。
+从内核到进程传递套接字地址结构的函数有4个：accept、recvfrom、getsockname和getpeername.这4个函数的其中两个参数是指向某个套接字地址结构的指针和指向表示该结构大小的整数变量的指针。例如：
+struct sockaddr_un cli;
+socklen_t len;
+len=sizeof(cli);
+getpeername(unixfd,(SA *)&cli,&len);
+把套接字地址结构大小这个参数从一个整数改为指向某个整数变量的指针，其原因在于：当函数被调用时，结构大小是一个值，它告诉内核结构的大小，这样内核在写该结构时不至于越界：当函数返回时，结构大小又是一个结果，它告诉进程内核在该结构中究竟存储了多少信息。这种类型的参数称为值-结果参数。
+
+我们一直在说套接字地址结构是在进程和内核之间传递的，对于诸如4.4BSD之类的实现来说，由于所有套接字函数都是内核中的系统调用，因此是正确的。然而在另外一些实现特别是System V中，套接字函数只是作为普通用户进程执行的库函数，这些函数与内核中的协议栈如何接口是实现的细节问题，对我们来说没有任何影响，然而为简单起见，我们继续说这些结构通过诸如bind和connect等函数在进程和内核之间进行传递
+当使用值-接参数作为套接字地址结构的长度是，如果套接字地址结构是固定长度的，那么从内核返回的值总是那个固定长度。例如UO4的sockaddr_in的长度是16,IP6的sockaddr_in6长度是28.然而对于可变长度的套接字地址结构（例如Unix域的sockadd_un）,返回值可能小于该结构的最大长度。
+在网络编程中，值-结果函数最常见的例子是所返回套接字地址结构的长度。不过本书中我们还会碰到其他值-结果函数
+
+字排序函数
+考虑一个16为函数，它由2个字节组成。内存中存储这两个字节由两种方法，一种是将低序字节存储在起始地址，这称为小端字节序;另一种是将高字节存储在起始地址，这称为大端字节序。
+
+在该图中，我们在顶部标明内存地址增长的方向为从右到左，在底部标明内存地址增长的方向为从左到右。我们还标明最高有效位是这个16位值最左边一位，最低有效位是这个16位值最右边一位
+遗憾的是，这两种字节序之间没有标准可循，两种格式都有系统使用。我们把某个特地该系统所有的字节序称为主机字节序。
+我们在一个短整数变量中中存放两字节的值0x0102,容纳后查看它的两个两序字节c[0]和c[1]，以此确定字节序.
+既然网络协议必须制定一个网络字节序，作为网络编程人员的我们必须清楚不同字节序之间的差异。举例来说，在每个TCP分节中都有16位的端口号和32位的IP4地址。发送协议栈和接收协议栈必须就这么多字节字段各个字节的传送顺序达成一致。网络协议使用大端字节来传送这些多字节整数。
+从理论上来说,具体实现可以按主机字节存储套接字地址结构中的各个字段，等到需要在这些字段和协议首部相应字段之间移动时，再在主机字节序和网络字节序之间进行互转，让我们免于操心转换细节。然而由于某些原因，套接字地址结构中某些字段必须按照网络字节序进行维护。因此我们要关注如何在主机字节序和网络字节序之间相互转换。这两种字节序之间的转换使用下面4个函数。
+#include<netinet/in.h>
+unit16_t htons(uint16_t host16bitvalue)
+unit32_t htonl(uint32_t host32bitvalue)
+uint16_t ntohs(uint16_t net16bitvalue)
+uint32_t ntohl(uint32_t net32bitvalue)
+当使用这些函数时，我们并不关心主机字节序和网络字节序的真实值（或为大端，或为小端）。我们所要做的只是调用适当的函数在主机和网络字节序之间转换某个给定值。在那些与网络协议使用字节序（大端）相同的系统中，这四个函数通常被定义为空宏。
+
+至此我们尚未定义字节这个属于。既然几乎所有的计算机系统都使用8位字节？我们就该用术语来表示一个8位的量。大多数因特网使用八位组。
+
+因特网标准中另外一个重要的约定是位序。在许多作为因特网标准的RFC文档中，可以看到类似如下的分组“图”示
+它表示按照在线缆上出现的顺序排列的4个字节（32个位），最左边的位是最早出现的最高有效位
+
+字节操纵函数
+操纵多字节字段的函数有两组，它们既不对数据作解释，也不假设数据是以空字符结束的C字符串。当处理套接字地址结构时，我们需要这些类型的函数，因为我们需要操纵诸如IP地址这样的字段，这些字段可能包含值为0的字节，却不是C字符串。以空字符结尾的C字符串是由在<sting.h>头文件中定义、名字以str（表示字符串）开头的函数处理的。
+名字以b（表示字节）开头的第一组函数起源于4.2BSD，几乎所有现今支持套接字函数的系统仍然提供它们。名字以men（表示内存）开头的第二组函数起源于于ANSI C标准，支持ANSI C函数库的所有系统都提供它们。
+
+#include<strings.h>
+void bzero(void *dest,size_t n bytes);
+void bcopy(const void *src,void *dest,size_t nbytes);
+int bcmp(const void *ptrl,const void *ptr2,size_t nbytes);
+这是我们首次遇到const限定词。就它在这儿的三处使用来说，它表示所限定的指针（src、ptr1和ptr2）所指的内容不会被函数更改。换句话说，函数只是读而不修改由const指针所指的内存单元。
+bzero把目标字节串中指定数目的字节置为0.我们经常使用该函数来吧一个套接字地址结构初始化为0.bcopy将指定数目的字节从源字节串移到目标字节串。bcmp比较两个任意的字节串，若相同则返回值为0,否则返回值为非0.
+memset把目标字符串指定数目的字节置为c。memcpy类似与bcopy,不过两个指针参数的顺序却是相反的。当源字节串与目标字节串重叠时，bcopy能够正确处理，但是memcpy的操作结果却不可知。这种情形下必须改用ANSI C的memmove函数。
+记住memcpy两个指针参数顺序的方法之一是记住它们是按照与C中赋值语句相同的顺序从左到右书写的;
+dest=src
+记住memset最后两个参数顺序的方法之一是认识到所有ANSI C的memXXX函数都需要一个长度参数，并且它总是最后一个参数。
+memcmp比较两个任意的字节串，若相同则返回0,否则返回一个非0值，是大于0还是小于0取决于第一个不等的字节：如果ptr1所指的字节串中这个字节大于ptr2所指字节中对应的字节，那么大于0,否则小于0.我们比较操作是在假设两个不等的字节均为无符号字符的前提下完成的。
+
+inet_aton、inet_addr和inet_stoa函数
+我们介绍两组地址转换函数。它们在ASCII字符串（这是人们偏爱使用的格式）与网络字节序的二进制值（这是存放在套接字地址）之间转换网际地址。
+inet_aton、inet_addr和inet_ntoa在点分十进制数串（例如“111.111.111.111”）与它长度为32位的网络字节序二进制值间转换IP4地址。
+
+#include<arpa/inety.h>
+int inet_aton(const char *strptr,struct in_addr *addrptr)
+返回：若字符串有效则为1,否则为0
+in_addr_t inet_addr(const char *strptr)
+返回：若字符串有效则为32为二进制网络字节序的IP4地址，否则为INADDR——NONE
+char *inet_ntoa(struct in_addr inaddr)
+返回：指向一个点分十进制数串的指针
+
+第一个函数inet_aton将strptr所指C字符串转换成32位的网络字节序二进制值，并通过指针addrptr来存储。若成功则返回1,否则返回0.
+<<<<<<< HEAD
+inet_addr进行相同的转换，返回值为32为的网络字节序二进制值。该函数存在一个问题所有2^32个可能二进制值都是有效的IP地址（从0.0.0.0到255.255.255.255），但是当出错时该函数返回INADDR_NONE常值（通常是一个32为均为1的值）。这意味着点分十进制数串255.255.255.255不能由函数处理，因为它的二进制值被用来指示该函数失败。
+inet_ntoa函数将一个32位的网络字节序二进制IP4地址转换成相应的点分十进制数串。该函数的返回值所指向的字符串驻留在静态内存中。这意味着函数是不可重入的，最后需要留意，该函数是以一个结构而不是指向该结构的一个指针作为其参数
+
+inet_pton和inet_ntop函数
+这两个函数是随IP6出现的新函数，对于IP4和IP6地址都适用，本书通篇都在使用这两个函数。函数名p和n分别代表 表达presentation 和 数值numeric。地址的表达格式通常是ASCII字符串，数值格式则是存放到套接字地址结构的二进制值
+
+#inlcude<arpa/inet.h>
+int inet_pton(int family,const char *strptr,viod *addrptr)
+返回：若成功则为1,若输入不是有效的表达格式则为0,若出错则为-1
+const char *int_ntop(int family,const void *addrptr,char *strptr,size_t len);
+返回：若成功则为指向结果的指针，若出错则为NULL
+这两个函数的family参数既可以数AF_INET,也可以是AF_INET6.如果不被支持的地址族座位family，这两个函数就都返回一个错误，并将erno置为EAFNOSUPPORT。
+第一函数尝试由转换有strptr指针所指的字符串，并通过addrptr指针存放二进制结果。若成功则返回值为1,否则如果对所指定的family而言输入的字符串不是有效的表达格式，那么返回值为0.
+inet——ntop进行相反的转换，从数值格式（addrptr）转换到表达格式（strptr）。len函数是目标存储单元的大小，以免该函数溢出其调用者的缓冲区。为有助于制定这个大小，在<netinet/in.h>头文件中有如下定义：
+#define INET_ADDRSTRLEN 16
+#define INET_ADDRSTRLEN 4
+如果len太小，不足以容纳表达格式结果（包括结尾的空字符），那么返回一个空指针，并置errno位ENOSPC。
+inet_ntop函数的strptr参数不可以是一个空指针。调用者必须为目标存储单元分配内存并制定七大小。调用成功时，这个指针就是该函数的返回值。
+
+int inet_pton(int family,const char *strptr,void *addrptr)
+{
+   if(family == AF_INET){
+      struct in_addr in_cal;
+      if(inet_aton(strptr,&in_cal)){
+         memcpy(addrptr,&in_val,sizeof(struct in_addr));
+         return(1);
+      }
+      return(0);
+   }
+   errno=EAPNOSUPPORT;
+   return(-1);
+}
+
+
+const char *inet_ntop(int family,const void *addrptr,char *strptr,size_t len)
+{
+    const u_char *p =(const u_char *)addrptr;
+    if(family==AF_INET){
+       char temp[INET_ADDRSTRLEN];
+       snprontf(temp,sizeof(temp),"%d.%d.%d.%d",p[0],p[1],p[2],p[3]);
+       if(strlen(temp)>=len){
+          errno=ENPSPC;
+          return(NULL);
+       }
+       strcpy(strptr,temp);
+       return(strptr);
+    }
+    errno=SEFNOSUPPORT;
+    return(NULL);
+}
+
+sock_ntop和相关函数
+inet_ntop的一个基本问题是：它套求调用者传递一个指向某个二进制地址的指针，而该指针通常包含在一个套接字地址结构中，这就要求调用者必须知道这个结果的格式的和地址族。
+这就是说，为了使用这个函数，我们必须位IP4编写如下代码：
+struct sockaddr_in addr;
+inet_ntop(AF_INET,&addr.sin_addr,str,sizeof(str));
+或者为IP6编写如下代码
+struct sockaddr_in6 addr6;
+inet_ntop(AF_INET6,&addr,sin6_addr,str,sizeof(str));
+这就使得我们的代码与协议相关了。
+为了解决这个问题，我们将自行编写一个名为sock_ntop的函数，它以指向某个套接字得知结构的指针位参数，查看该结构的内部，然后调用适当的函数返回该地址的表达格式。
+#include "unp.h"
+char *sock_ntop(const struct sockaddr *sockaddr,sock_t addrlen);
+返回：若成功则为非空指针，若出错则为NULL;
+sockaddr指向长度位addrlen的套接字地址结构。本函数用它自己的静态缓冲区来报村结果，而至想该缓冲区的一个指针就是它的返回值。
+表达格式就是在一个IP4地址的点分十进制数串格式之后，或者在一个括以方括号的IP6地址的十六进制数串进制格式之后，跟一个终止符（我们使用一个分号，类似于URL语法）
+
+
+inet_addr进行相同的转换，返回值为32为的网络字节序二进制值。该函数存在一个问题所有2^32个可能二进制值都是有效的IP地址（从0.0.0.0到255.255.255.255），但是当出错时该函数返回INADDR——NONE常值（通常是一个32为均为1的值）。这意味着点分十进制数串255.255.255.255不能由函数处理，因为它的二进制值被用来知识该函数失败。
+
+因此缓冲区大小对IP4至少为INET_ADDRSTRLEN加上6个字节（16+6=22），对于IP6至少为INET6_ADDRSTRLEN加上8个字节（46+8=54）
+我们给出了该函数仅为AF_INET情形下的代码
+char *sock_ntop(const struct sockaddr *sa,socklen_t salen)
+{
+   char portstr[8];
+   static char str[128];
+   switch(sa->sa_family){
+   case AF_INET:{
+      struct sockaddr_in *sin=(struct sockaddr_in *)sa;
+      if(inet_ntop(AF_INET,&sin->sin_addr,str,sizeof(str))==NULL)
+         return(NULL);
+      if(ntohs(sin->sin_port)!=0){
+         snprintf(portstr,sizeof(portstr),":%d",ntohs(sin->port));
+         sttrcat(str,portstr);
+         }
+         return(str);
+      }
+   }
+ }
+ 我们还为操作套接字地址结构定义了其它几个函数，它们将简化我们的代码在IP4与IP6之间的移植
+include "unp.h"
+int sock_bind_wild(int sockfd,int family);
+int sock_cmp_addr(const struct sockaddr *sockaddr1,
+                 const struct sockaddr *sockaddr2,socklen_t addrlen);
+int sock_cmp_addr(const struct sockaddr *sockaddr1,
+                  const strcut sockaddr *sockaddr2,socklen_t addrlen);
+int sock_get_port(cosnt struct *sockaddr,socklen_t);
+char *sock_ntop_host(const struct sockaddr *sockaddr,socklen_t addrlen);
+void sock_set_addr(const struct sockaddr *sockaddr,socklen_t,void *ptr);
+void sock_set_port(const struct sockaddr *sockaddr,socklen_t addrlen,int port);
+void sock_set_wild(struct sockaddr *sockaddr,socklen_t addrlen);
+sock_bing_wild将通配地址和临时端口捆绑到一个套接字。sock_cmp_addr比较两个套接字结构的地址部分;sock_cmp_port则比较连个套接字地址结构的端口号部分。sock_set_addr把一个套接字地址结构中的地址部分置为ptr指针所指的值：sock_set_port则只设置套接字地址结构的端口号部分。sock_set_wild把一个套接字ithiel结构中的地址部分置为通配地址。跟本书所有函数一样，我们也为那些返回值不是void的上述函数提供了包裹函数，它们名字以S开头，我们的程序通常调用这些包裹函数。
+
+
+readn、writen和readline函数
+字节流套接字（例如TCP套接字）上的read和write函数所表现的行为不同于通常的文件I/O。字节流套接字上调用read或write输入或输出的字节数可能比请求的数量少，然而这不是出错的状态。这个现象的原因在于内核中用于套接字的缓冲区可能已经达到了极限。此时所需的是调用者再次调用read或write函数，以输入或输出剩余字节。有些版本的UNIX在往一个管道中写多余4096字节的数据也会表现出这样的行为。这个现象在read一个字节流套接字时很常见，但是write一个字节流套接字时只能在该套接字为非阻塞的前提下才出现。尽管如此，为预防万一，不让实现返回一个不足的字节计数值，我们总是改为调用writen函数来取代write函数。
+我们提供的以下3个函数是每当我们读或写一个字节流套接字时总要使用的函数
+#include "unp.h"
+ssize_t readn(int files,void *buff, size_t nbytes);
+ssize_t written(int files,const void *buff,size_t nbytes);
+ssize_t readline(int files,void *buff,size_t maxlen);
+返回：读或写的字节数，若出错则为-1
+#include "unp.h"
+ssize_t 
+readn(int fd,void *vptr,size_t n)
+{
+   size_t nleft;
+   ssize_t nread;
+   char *ptr;
+   ptr=vptr;
+   nleft=n;
+   while(nleft>0){
+      if((nread=read(fd,ptr,nleft))<0){
+         if(errno==ENTER)
+            nread-0;
+         else
+            return(-1);
+         }else if(nread==0)
+            break;
+         nleft -=nreadl
+         ptr+=nread;
+      }
+      return(n-nleft);
+   }
+//readn函数，从一个描述符读n字节
+
+#include "unp.h"
+ssize_t writen(int fd,const void *vptr,size_t n)
+{
+    size_t nleft;
+    sszie_t nwriteten;
+    const char *ptr;
+    ptr=vptr;
+    nleft=n;
+    while(nleft>0){
+        if((nwritten=write(fd,ptr,nleft))<=0){
+            if(nwritten<0&&errno=ENTER)
+                written=0;
+            else
+                return(-1);
+            }
+            nleft-=nwritten;
+            ptr+=nwritten;
+        }
+        return(n);
+    }
+    
+    //writen函数：往一个描述符写n字节
+#include "unp.h"
+ssize_t readline(int fd,void *vptr,size_t maxlen)
+{
+    ssize_t n,rc;
+    char c,*ptr;
+    ptr=vptr;
+    for(n=1;n<maxlen;n++){
+    again:
+        if((rc=read(fd,&c,1))==1){
+            *ptr++=c;
+            if(c=='\n')
+                break;
+            }else if(rc==0){
+                *ptr=0;
+                return(n-1);
+            }else{
+                if(errno==ENTER)
+                    goto again;
+                return(-1);
+            }
+        }
+        *ptr=0;
+        return(n);}
+//readline函数，从一个描述符读文本行，每次一个字节
+
+上述三个函数查找ENTER错误（表示系统调用被一个捕获的信号中断），如果发生错误则继续进行读或写才做。既然这些函数的作用是避免让调用者来处理不足的字节计数值，那么我们就地处理该错误，而不是强迫调用者再次调用readn或writen函数。
+注意这个readline函数每读一个字节的数据就调用一次系统的read函数。这是非常低效的，为此我们在代码中著名“PAINFULLY SLOW”。当面临从某个套接字读入文本行这一需求时，改用标准I/O函数库（称为stdio）相当有人。我们将在14.8节中详细讨论这种方法，不过预先之处这是中危险的方法。解决本性能问题的stdio缓冲机制却引发许多后勤问题，可能导致在应用程序中存在相当一笔的缺陷。究其原因在于stdio缓冲区的状态是不可见的。为便于深入解释，让我们考虑客户和服务器之间一个基于文本行的协议，而使用该协议的多个客户程序和服务器程序可能是在一段时间内先后实现的（这种情形其实相当普遍，举例来说，按照HTTP规范独立编写的Web浏览器程序和Web服务器程序就相当之多）。良好的防御性编程技术要求这些程序不仅能够期望它们的对端程序也遵循相同的网络协议，而且能够检查出未预期的网络数据传送并加以修正（恶意企图自然也被检查出来），这样使得网络应用能够从存在问题的网络数据传送中恢复，可能的话还会继续工作。为了提升性能而使用stdio来缓冲数据违背了这些目标，因为这样的应用进程在任何时刻都没有办法分辨stdio缓冲区是否持有未预期的数据。
+基于文本行的网络协议相当多，譬如SMTP、HTTP、FTP的连接控制协议以及finger等。因此针对文本行操作这一需求一再被提出，然而我们的建议是依照缓冲区而不是文本行的要求来编程。编写从缓冲区读取数据的代码，当期待一个文本行时，就查看缓冲区中是否含有那一行。
+例子给出了readline函数的一个较快速版本，它使用自己的而不是stdio提供的缓冲机制。其中重要的是readline内部缓冲区的状态是暴露的，这使得调用者能够查看缓冲区中到底接收到了什么。即使使用这个特性readline仍然可能存在问题，具体见6.3节。注入select等系统函数仍然不可能知道readline使用的内部缓冲区，因此编写不严谨的程序很可能发现自己在select上等待的数据早已收到并存放在readline的缓冲区中了。由于这个原因，混合调用readn和readline不会像预期的那样工作，除非把readn修改成也检查该内部缓冲区
+
+#include "unp.h"
+static int read_cnt;
+static char *read_ptr;
+static char read_buf[MAXLINE];
+static ssize_t;
+my_read(int fd,char *ptr)
+{
+    if(read_cnt<=0){
+    again:
+    if((read_cnt=read(fd,read_buf,sizeof(read_buf)))<0){
+        if(errno==ENTER)
+            goto again;
+        return(-1);
+    }else if(rad_cnt == 0)
+        return(0);
+     read_ptr=read_buf;
+     }}
+        if((rad_cnt=rad(fd,read_buf,sizeof(rad_buf)))<0){
+            if(errno==ENTER)
+                goto again;
+            return(-1);
+        }else if(read_cnt==0)
+            return(0);
+        read_ptr=read_buf;
+    }
+    read_cnt--;
+    *ptr=*read_ptr++;
+    return(1);
+}//内部函数my_read每次多多读MAXLINE个字符，然后每次返回一个字符。
+ssize_t readline(int fd,void *vptr,size_t maxlen)
+{
+    ssizee_t n,rc;
+    char c,*ptr;
+    ptr=vptr;
+    for(n=1;n<maxlen;n++){
+        if((rc=my_read(fd,&c))==1){
+            *ptr++=c;
+            if(c=='\n')
+                break;
+            }else if(rc==0){
+                *ptr=0;
+                return(n-1);}
+                else
+                    return(-1);
+                }
+            *ptr=0;
+            return(n);
+        }
+        
+ssize_t readlinebuf(void **vptrptr)
+{
+    if(read_cnt)
+        *vptrptr=read_ptr;
+    return(read_cnt);
+}
+//readlinebuf这个新函数能够展露内部缓冲区的状态，便于调用者查看在当前文本行之后是否接收到了新的数据。
+
+小结
+套接字地址结构是每个网络程序的重要组成部分。我们分配它们，填写它们，把指向它们的指针传递给各个套接字函数。有时我们把指向这些结构之一的指针传递给一个套接字函数，并由该函数填写结构内容。我们总是以引用形式来传递这些结构（也就是说，我们传递的是指向结构的指针，而不是结构本身），而且将结构的大小作为一个参数来传递。当一个套接字函数需要填写一个结构时，该结构的长度也以引用形式传递，这样它的值也可以被函数更改，我们把这样的参数称为值-结果函数。
+套接字的地址结构是自定义的，因为它们总是以一个标识其中所含地址之协议族的字段开头。支持长度可变套接字地址结构的较新实现在开头还包含一个长度字段，它含有这个结构的长度信息。
+在表达格式（我们平时书写的格式，例如ASCII字符串）和数值格式（存放到套接字地址结构格式）之间转换IP地址的两个函数是inet_pton和inet_ntop.虽然我们将在稍后的章节使用这两个函数，但是必须说明，它们是协议相关的。操纵套接字地址机构更好的办法是把它们作为不透明对象，仅知道指向机构的指针和结构的大小而已。按照这种方法，我们开发了一组名字以sock_开头的函数，协助实现程序的协议无关性。我们将在第11章中使用getaddrinfo和getnameinfo函数完成这套协议无关的工具开发。
+TCP套接字位应用进程提供了一个字节流，它们没有记录标记。从一个TCP套接字read的返回值可能比我们请求的数量少，但是这不表示发生了错误。为帮助读或写一个字节流，我们开发了readn、writrn和readline这3个函数，并在全书中广泛使用。对于文本行交互的应用来说，程序应该按照操作缓冲区而非按照文本行来编写。
+

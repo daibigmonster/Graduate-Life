@@ -1,0 +1,113 @@
+应用层实体（如客户或服务器进程）间交换的PDU称为应用数据，其中在TCP应用进程之间交换的是没有长度限制的单个双向字节流，在UDP应用进程之间交换的是其长度不超过UDP发送缓冲区大小的单个记录，在SCTP应用进程之间交换的是没有总长度限制的单个或多个双向记录流。传输层实体（例如对应某个端口的传输层协议代码的一次运行）间交换的PDU称为消息，其中TCP的PDU特称为分节（srgment）。消息或分节的长度是有限的。在TCP传输层中，发送端TCP把来自应用进程的字节流数据（即由应用进程通过一次次输出操作写出到发送端TCP套接字中的数据）按顺序经分割后封装在各个分节中传送给接收端TCP，其中每个分节所封装的数据既可能是发送端应用进程单词输出操作的结果，也可能是连续数次输出操作的结果，而且每个分节所封装的单词输出操作的结果或者首尾两次输出操作的结果既可能是完整的，也可能是不完整的，具体，具体取决于可在连接建立阶段由对端通告的最大分节大小以及外出接口的最大传输单元或外出路径MTU（如果网络层具有路径MTU发现功能，如IPV6）。分节除了用于承载应用数据外，也用于建立连接SYN、、终止连接FIN、中断连接RST、确认数据接收ACK、刷送待发数据PSH和携带紧急数据指针URG，而且这些功能（包括承载数据）可以灵活组合。UDP传输层相当简单，发送端USP就把来自应用进程的单个记录整个封装在UDP消息中传送给接收端UDP。STCP引入了称为块（chunk）的数据单元，SCTP消息就由一个公共首部加上一个或多个块构成：公共首部类似与UDP消息的首部，仅仅给出源目的端口号和整个SCTO消息的校验和：块则既可以承载数据（称为DATA块），也可以承载控制信息（总称为控制块）。发送端SCTP把来自应用进程（一个或多个）记录流数据按照流内顺序和记录边界封装在各个DATA块中，并在DATA块首部记上各自的流ID。一个记录通常对应一个DATA块;对于过长的记录，发送端SCTP消息既可以像UDP那样拒绝发送，也可以把它们拆分到多个DATA块中以便发送，接收端SCTP收取后把它们组合成单个记录上传。作为传输层的SCTP消息既可以只包含单个块（DATA块或控制块），也可以在接口MTU或路径MTU的限制下包含多个块（称为块的捆绑，控制块在前，DATA块在后）。SCTP接发两端均独立处理捆绑在同一个消息中的各个块，鉴于此，我们可以直接把块作为传输才能PDU看待，整本书也这么使用。
+    网络层实体间交换的PDU称为IP数据包，其长度有限。发送端IP把来自传输层的消息（或TCP分节）整个封装在IP数据包中传送。链路层实体之间交换的PDU称为帧，其长度取决于具体接口。Ip数据报由IP首部和所承载的传输层数据（即网络层的SDU）构成。过长的IP数据包无法封装在单个帧中，需要线对SDU进行分片，再把分成的各个片段冠以新的IP首部封装到多个帧中。在一个IP数据报从源端口到目的端的传送过程中，分片擦做既可能发生在源端，也可能发生在发生在途中，而其逆操作即重组一般只发生在目的端;SCTP为了传送过长的记录采取了类似的分片和重组措施。TCP/IP协议族为了提高效率尽可能避免IP的分片/重组操作：TCP根据MSS和MTU限定了每个分节的大小以及SCTP根据MTU分片/重组过长记录都是这个目的(SCTP的块捆绑则是为了避免IP分片/重组操作的前提下提高传输效率）：另外，IPv6禁止在途中分片操作（基于其路径MTU发现功能），IPv4也尽量避免这种操作。不论是否分片，都由IP作为链路层的SDU传入链路层，并由链路层封装在帧中的数据称为分组（packet，俗称包）。可见一个分组既可能是一个完整的Ip数据包，也可能是某个IP数据报的SDU的一个片段被冠以新的IP首部后的结果。本书中讨论的MSS是应用层（TCP）与传输层之间的接口属性，MTU则是网络层和链路层之间的接口属性。
+    我们分配并初始化一个sockaddr_in类型的结构，把该结构的协议族成员设置为AF_INET，并指定socket函数的第一个参数为AF_INET。
+    这两个程序的另一个不足之处是：用户必须以点分十进制给出服务器的IP地址（如适合与IPv4版本的×××××）。人们更习惯于用名字（如www.baidu.com)来代替数字。
+    任何现实世界的程序都必须检查每个函数调用是否返回错误。在图1-5所示的程序中，我们检查socket、inept_pton、connect、read和fputs函数是否返回错误，当发生错误时，就调用我们自己的err_quit或err_sys函数输出一个错误消息并终止程序的运行。我们发现绝大多数情况下这正是我们想做的事。个别情况下，当这些函数返回错误时，我们想做的事并非简单的终止程序运行，我们必须检查系统调用是否被中断了。
+    既然发生错误时终止程序的运行是普遍的情况，我们可以通过定义包裹函数来缩短程序。每个包裹函数完成实际的函数调用，检查返回值，并在发生错误时终止进程。我们约定包裹函数名是实际函数名的首字母大写形式。例如，语句
+    sockfd=Socket(AF_INET,SOCK_STREAM,o);
+中，函数Socket是函数socket的包裹函数，如下
+int Socket(int family,int type,int protocol)
+{
+    int n;
+    if((n+socket(family,type,prtocol))<0)
+        err_sys("socket error");
+    return(n);
+}//socket函数的包裹函数
+这些包裹函数不见得多节省代码两，但当我们在第26章中讨论线程时，将会发现线程函数遇到错误时并不设置标准Unix的errno变量，二是把errno的值作为函数返回值返回调用者。这意味着每次调用pthread_开头的某个函数时，我们必须分配一个变量返回函数返回值，以便在调用err_sys前把errno变量设置成该值。为避免引入花括号把代码弄得很混乱，我们可以使用C语言的都好操作符，把errno的赋值与err_sys的调用组合成一条语句，如下所示：
+int n;
+if((n=pthread_mutex_lock(&ndone_mutex))!=0)
+errno=n,err_sys("pthread_mutex_lock error");
+我们也可以为此定义一个新的错误处理函数，它取系统的错误号作为一个参数，不过通过定义如下所示的包裹函数，我们可以让上段代码更为易读：
+Pthread_mutex_lock(&ndone_mutex);
+要是仔细推敲C代码的编写，我们可以用宏来替代函数，从而稍微提高运行时效率，不过包裹函数很少是程序性能的瓶颈所在。
+void Pthread_mutex_lock(pthread_mutex_t *mptr)
+{
+    int n;
+    if((n=pthread_mutex_lock(mptr))==0)
+    return;
+    erron=0;
+    err_sys("pthread_mutex_lock error");
+}
+Unix errno值
+只要一个Unix函数（例如某个套接字函数）中有错误发生，全局变量errno就被置为一个知名该错误类型的正值，函数本身则通常返回-1。err_sys查看errno变量的值并输出相应的出错消息，例如errno值等于ETIMEDOUT时，讲述储“Connection timed out”（连接超时）。
+errno的值只有在函数发生错误时设置。如果函数不返回错误，errno的值就没有定义。errno的所有整数错误值都是常值，具有以“E”开头的全大写字母名字，并通常在<sys/errno.n>头文件中定义。值0不表示任何错误。
+在全局变量存放error值对于共享所有全局变量的多个线程并不适合。
+一个简单的时间获取服务器程序
+我们可以编写简单的TCP时间服务器程序
+创建TCP套接字
+  TCP套接字的创建与客户程序相同
+  
+关于  int main(int argc,char **argv)的解释
+main(int argc,char *argv[],char **env)才是UNIX和Linux的标准写法
+//argc是程序运行的参数个数（程序接受参数的个数）
+//argc是运行参数的字符串数组（每个char*表示程序路径名和参数）
+//argc,argv用命令行编译程序时有用。
+//主函数main中变量（int argc,char *argc[])的含义
+//argc:整数，用来统计你运行程序时送给main函数的命令行参数的个数
+//*argv[]：字符串数组，用来存放指向你的字符串参数的指针数组，每个元素指向一个参数
+argv[0]指向程序运行的全路径名
+argv[1]指向在DOS命令行执行程序后的第一个字符串
+argv[2]指向执行程序名后的第二个字符串
+...
+argv[argc]为NULL
+**env:字符串数组。env[]的每个元素都包含ENVVAR=value形式的字符串。其中ENVVAR位环境变量，value为ENVVAR的对应值。
+程序举例：
+#include <iostream>
+#include <stdlib.h>
+using namespace std;
+int main(int argc,char **argv)
+{
+    if(argc<=2)
+    {
+        cout<<"argument number has to be more than 2"<<endl;
+        return 0;
+    }
+    cout<<"argument number:"<<argc<<endl;
+    int sum=0;
+    cout<<"No.0 arg filePath: "<<argv[0]<<endl;
+    for(int i=1;i<=argc-1;++i)
+    {
+        cout<<"No."<<i<<"arg: "<<argv[i]<<endl;
+        sum+=atoi(argc[i]);//atoi将字符串转换位int类型
+    }
+    cout<<"sum = "<<sum<<endl;
+    return 0;
+}
+
+在c/c++写网络程序的时候，往往会遇到字节的网络顺序和主机顺序的问题。这是就可能用到htons(),ntohl(),ntohs(),htons()这四个函数。
+网络字节顺序与本地字节顺序之间的转换函数：
+htonl()--host to network long;
+htons()--host to network short;
+ntohl()--network to host long;
+ntohs()--network to host short;
+之所以需要这些函数是因为计算机数据表示存在两种字节顺序:NBO与HBO
+网络字节顺序NBO（Network Byte Order):
+按从高到低的顺序存储，在网络上使用统一的网络字节顺序，可以避免兼容性问题。
+主机字节顺序（HBO，Host Byte Order):
+不同的机器HBO不相同，与CPU设计有关，数据的顺序是由CPU决定的，而与操作系统无关。
+
+
+bind()函数
+将本地地址与一套套接口捆绑。本函数适用于未连接的数据包或流类套接口，在connect()或listen()调用前使用。当用socket()创建套接口后，它便存在一个名字空间（地址族）中，但并未赋名。bind()函数通过给一个未命名的套接口分配agiel名字来为套接口建立本地捆绑（主机地址/端口号）。
+int bind(int sokfd,const struct sockaddr * my_addr,socklen_t addlen);
+sockfd:标识一未捆绑的套接口的描述字。
+my_addr:赋予套接口的地址。
+sockaddr结构定义如下：
+struct sockaddr{
+u_short sa_family;
+char sa_data[14];
+};
+addrlen:name名字的长度
+返回：成功返回0,失败返回-1.
+参数列表中，sockfd表示已经建立的socket编号（描述符）;
+my_addr是一个指向sockaddr结构体类型的指针;
+参数addrlen表示my_addr结构的长度，可以用sizeof函数获得。
+
+如果你尚不习惯改用snprintf代替较早的sprintf函数，调用sprintf无法检查目的缓冲区是否一处，相反，snprintf要求其第二个参数指定的缓冲区的大小，因此可以确保该缓冲区不溢出。
+
+为什么套接字提供的是从OSI模型的顶上三层进入传输层的接口？这样设计有两个理由，理由之一是顶上三层处理具体的网络应用（如FTP、Telent或HTTP）的所有细节，却对通信细节了解很少;底下四层对具体网络了解不多，却处理所有的通信细节：发送数据、等待确认，给无序到达的数据排序，计算并验证校验和，等等。理由之二是顶上三层通常构成所谓的用户进程，底下四层却通常作为操作系统内核的一部分提供，Unix与其他现代操作系统都提供分隔用户进程与内核的机制。由此可见，第四层与第五层之间的接口是构建API的自然位置。
+
+从右往左查看该图，最右边的5个网络应用在使用IPv6;我们将
+最左边名为tcpdump的网络应用或者使用BSD分组过滤器，或者使用数据链路提供者接口直接与数据链路进行通信。处于其右边所有9个应用下面的虚线标记位API，它通常是套接字或XTI。访问BPF或DLPI的接口不使用套接字或XTI。
+
+

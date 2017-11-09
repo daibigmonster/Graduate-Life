@@ -1,0 +1,30 @@
+操纵多字节字段的函数由两组，它们既不对数据作解释，也不假设数据是以空字符结束的C字符串。当处理套接字地址结构时，我们需要这些类型的函数，因为我们需要操纵诸如IP地址这样的字段，这些字段可能包含值为0的字节，却不是C字符串。以空字符结尾的C字符串是由在<string.h>头文件中定义，名字以str(表示字符串)开头的函数处理的
+#include <strings.h>
+void bzereo(void *dest,size_t nbytes);
+void bcopy(const void *src,void *dest,size_t nbytes);
+int bcmp(const void *ptrl,const void *ptr2,size_t nbytes);
+bzero把目标字节串中指定数目的字节置为0.我们经常使用该函数来把一个套接字地址结构出书化为0,bcopy将指定数目的字节从源子节串移动目标字节串。bcmp比较两个任意的字节串，若相同返回值为0,否则返回值为非0
+#incldue<string.h>
+void *memset(void *dest,int c,size_t len);
+void *memcpy(void *dest,const void *src,size_t nbytes);
+int memcmp(const void *ptrl,const void *ptr2,size_t nbytes);
+memset把指定目标字节串指定数目的字节置为值c。
+inet_aton,inet_addr和inet_ntoa函数
+#include<arpa/inet.h>
+int inet_aton(const char *strptr,struct in_addr *addrptr);//返回：若字符串有效为1,否则为0
+in_addr_t inet_addr(const char *strptr);
+char *inet_ntoa(struct in_addr inadrr);//返回一个点分十进制数串的指针
+第一个函数inet_aton将strptr所指C字符串转换成一个32位的网络字节序二进制值，并通过指针addrptr来存储。若成功返回，否则返回0;（若addrptr指针为空，那么该函数仍然对输入的字符串执行有效性检查，但是不存储任何结果）
+inet_addr进行相同的转换，返回值为32位的网络字节序二进制值
+inet_ntoa函数将一个32位网络字节序二进制IP4地址转换成相应的点分十进制数串，由该函数的返回值所指想的字符串主流在静态内存中。最后要留意，该函数以一个结构而不是指向该结构的指针作为其参数。
+
+3.7inet_pton和inet_ntop函数
+函数名中P=presentetion,N=numeric
+#include <arpa/inet.h>
+int inet_pton(int family,const char *strptr,void *addrptr);
+//返回，若成功则为1,若输入不是有效的表达式则为0,若出错则为-1;
+const char* inet_ntop(int family,const void *addrptr,char *strptr,size_t len)//返回，若成功怎为指向结果的指针，若出错则为NULL
+
+这两个函数的family参数既可以是AF_INT，也可以使AF_INET6。
+第一个函数尝试转换由strptr指向的字符串，并通过addrptr指针存放二进制结果。若成功则返回值为1,否则如果对指定的family而言输入的字符串不是有效的表达格式，那么返回值为0;
+inet_ntop进行相反的转换，从数值格式转换到表达格式，了那参数是目标存储单元的大小，一面函数溢出其调用这的缓冲区。
