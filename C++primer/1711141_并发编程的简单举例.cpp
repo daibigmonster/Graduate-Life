@@ -6,16 +6,17 @@ using namespace std;
 
 void hello(){
 
-　　cout << "Hello Concurrent World\n";
+	cout << "Hello Concurrent World\n";
 
 }
 
 int main(){
-
-　　thread t(hello);
-
-　　t.join();
-
+	cout << "MainThread is : " << this_thread::get_id() << endl;
+	thread t(hello);
+	cout << t.get_id() << endl;
+	cout << hex << t.get_id() << endl;
+	t.join();
+	return 0;
 }
 
 
