@@ -1,14 +1,18 @@
 #include <iostream>
 #include <thread>
 
-//using namespace std;
+using namespace std;
 
 void hello(){
-	std::cout << "Hello Concurrent World\n";
+	cout << "Hello Concurrent World\n";
 }
 
+
 int main(){
-	std::thread t(hello);
+	cout << "MainThread is : " << this_thread::get_id() << endl;
+	thread t(hello);
+	cout << "TaskThread is : " << t.get_id() << endl;
+	cout << hex << t.get_id() << endl;
 	t.join();
 	return 0;
 }
