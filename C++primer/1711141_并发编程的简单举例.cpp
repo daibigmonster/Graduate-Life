@@ -1,21 +1,16 @@
 #include <iostream>
-
 #include <thread>
 
-using namespace std;
+//using namespace std;
 
 void hello(){
-
-　　cout << "Hello Concurrent World\n";
-
+	std::cout << "Hello Concurrent World\n";
 }
 
 int main(){
-
-　　thread t(hello);
-
-　　t.join();
-
+	std::thread t(hello);
+	t.join();
+	return 0;
 }
 
 
