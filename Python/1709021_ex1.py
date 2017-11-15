@@ -1,16 +1,14 @@
 from datetime import datetime
-
-
 import functools
 
-def log(func):
+def logggg(func):
     @functools.wraps(func)
     def wrapper(*args, **kw):
         print('call %s():' % func.__name__)
-        return func(*args, **kw)
+        return func(*args, **kw),print('call %s()' % func.__name__)
     return wrapper
 
-@log
+@logggg
 def now():
     print('2015-3-25')
     print(datetime.now())
@@ -26,9 +24,26 @@ def logger(text):
         return wrapper
     return decorator
 
+
 @logger('DEBUG')
 def today():
     print('2015-3-25')
 
 today()
 print(today.__name__)
+
+
+def log(text):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args,**kw):
+            print('%s %s()' % (text,func.__name__))
+            return func(*args,**kw),print('%s %s()' % ('end call',func.__name__))
+        return wrapper
+    return decorator
+
+
+@log('')
+def now():
+    print(datetime.now())
+now()
