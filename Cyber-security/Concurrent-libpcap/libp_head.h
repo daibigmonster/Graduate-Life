@@ -49,4 +49,5 @@ struct udp_header
 };
 
 void Initialize_libppcap_online();
+void Initialize_libppcap_offline(char* filename);
 #endif

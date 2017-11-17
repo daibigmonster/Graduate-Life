@@ -1,9 +1,8 @@
 #include "libp_head.h"
 #include <iostream>
 #include <pcap.h>
-#include<arpa/inet.h>
+#include <arpa/inet.h>
 #include <string>
-
 using std::cout;
 using std::endl;
 
@@ -32,9 +31,4 @@ void Initialize_libppcap_offline(char* filename){
 		return ;
 	}
 	cout << "读取线下文件: " << filename << " 成功！" << endl;
-}
-int main(int argc,char* argv[]) {
-	if(argv[1] == nullptr)Initialize_libppcap_online();
-	if(argv[1] != nullptr)Initialize_libppcap_offline(argv[1]);
-	return 0;
 }
