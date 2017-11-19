@@ -160,9 +160,9 @@ int main()
    temp.netaddr = 0;
    temp.mask = 0;
    temp.action = 1;
-   nids_register_chksum_ctl(&temp,1);
-   nids_params.device = NULL;
-   nids_params.filename = "1707141.pcap";
+   nids_register_chksum_ctl(&temp,1);//1代表不需要校验和
+   nids_params.device = "enp2s0";
+   //nids_params.filename = "1707141.pcap";*/
    int a=nids_init();
    if(!a)//Libnids初始化
    {
