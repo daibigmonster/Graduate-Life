@@ -7,6 +7,7 @@
 #include <time.h>
 #include <string.h>
 #include <ctype.h>
+#include <string>
 char ascii_string[10000];
 char* char_to_ascii(char ch)//该函数的功能主要用于把协议数据进行显示
 {
@@ -160,9 +161,10 @@ int main()
    temp.netaddr = 0;
    temp.mask = 0;
    temp.action = 1;
-   nids_register_chksum_ctl(&temp,1);
-   nids_params.device = NULL;
-   nids_params.filename = "1707141.pcap";
+   nids_register_chksum_ctl(&temp,1);//1代表不需要校验和
+
+  // nids_params.device = b;
+   nids_params.filename = "1707110.pcap";
    int a=nids_init();
    if(!a)//Libnids初始化
    {

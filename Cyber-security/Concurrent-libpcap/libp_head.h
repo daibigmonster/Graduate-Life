@@ -3,7 +3,36 @@
 #include <pcap.h>
 #include <iostream>
 #include <algorithm>
-struct iphdr
+/*struct pcap_pkthdr
+{
+	struct timeval ts;     time stamp
+	bpf_u_int32 caplen;    length of portion present
+	bpf_u_int32 len;       length this packet (off wire)
+};  */
+
+/*struct nids_prm
+{
+	int n_tcp_strams;
+	int n_hosts;
+	char* device;
+	char* filename;
+	int sk_buff_size;数据结构是sk_buff是Linux内核中一个重要的数据结构，是用来进行数据包排队
+	操作的，默认值为168
+	int dev_addon;
+	void (*syslog){};这是一个函数指针，默认值为nids_syslog()函数。在syslog函数中可以
+加测入侵攻击，如网络扫描攻击，也可以检测一些异常情况，如无效TCP标记
+	int suslog_level;
+	int scan_num_hosts;
+	int scan_delay;
+	int scan_num_ports;
+	int (*no_men)(char *);
+	int (*ip_filter)();
+	char* pcap_filter;
+	int promisc;
+	int one_loop_less;
+	int pcap_time_out;
+}*/
+/*struct iphdr
 {
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 	unsigned int header_len:4;
@@ -23,10 +52,8 @@ struct iphdr
 	u_int16_t check;
 	u_int32_t saddr;
 	u_int32_t daddr;
-	/*The options start here. */
-};
-
-
+	The options start here.
+};*/
 struct tcp_header
 {
     u_short sport;
@@ -48,6 +75,8 @@ struct udp_header
     u_int16_t checksum;
 };
 
-//void Initialize_libppcap_online();
-//void Initialize_libppcap_offline(char* filename);
+/*
+void Initialize_libppcap_online();
+void Initialize_libppcap_offline(char* filename);
+*/
 #endif
