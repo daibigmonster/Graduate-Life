@@ -1,3 +1,8 @@
+#ifndef _INTERNET_HEADER_
+#define _INTERNET_HEADER_
+#include <pcap.h>
+#include <iostream>
+#include <algorithm>
 /*struct pcap_pkthdr
 {
 	struct timeval ts;     time stamp
@@ -27,12 +32,7 @@
 	int one_loop_less;
 	int pcap_time_out;
 }*/
-#ifndef _INTERNET_HEADER_
-#define _INTERNET_HEADER_
-#include <pcap.h>
-#include <iostream>
-#include <algorithm>
-struct iphdr
+/*struct iphdr
 {
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 	unsigned int header_len:4;
@@ -52,10 +52,8 @@ struct iphdr
 	u_int16_t check;
 	u_int32_t saddr;
 	u_int32_t daddr;
-	/*The options start here. */
-};
-
-
+	The options start here.
+};*/
 struct tcp_header
 {
     u_short sport;
@@ -77,6 +75,8 @@ struct udp_header
     u_int16_t checksum;
 };
 
+/*
 void Initialize_libppcap_online();
 void Initialize_libppcap_offline(char* filename);
+*/
 #endif
