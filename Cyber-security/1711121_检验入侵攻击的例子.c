@@ -1,8 +1,9 @@
 #include "mylibnids.h"
 #include "nids.h"
-#include <string>
+#include <stdio>
+#include <stdlib>
 #include<arpa/inet.h>
-using namespace std;
+
 
 static void (my_nids_syslog(int type,int errnum,
 		struct iphdr* iph,void* data))(){
