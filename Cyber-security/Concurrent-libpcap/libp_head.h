@@ -48,6 +48,6 @@ struct udp_header
     u_int16_t checksum;
 };
 
-void Initialize_libppcap_online();
-void Initialize_libppcap_offline(char* filename);
+//void Initialize_libppcap_online();
+//void Initialize_libppcap_offline(char* filename);
 #endif
