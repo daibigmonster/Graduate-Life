@@ -1,3 +1,4 @@
+
 //Libnids提供了TCP数据流重组的功能，它可以显示任何基于TCP协议的应用层。利用Libnids可以很好地实现显示TCP的连接过程，并对它们的传输数据进行详细的分析。
 #include "nids.h"//Libnids头文件
 #include <pcap.h>
@@ -160,9 +161,9 @@ int main()
    temp.netaddr = 0;
    temp.mask = 0;
    temp.action = 1;
-   nids_register_chksum_ctl(&temp,1);
-   nids_params.device = NULL;
-   nids_params.filename = "1707141.pcap";
+   nids_register_chksum_ctl(&temp,1);//1代表不需要校验和
+   //nids_params.device = "enp2s0";
+   nids_params.filename = "1707110.pcap";
    int a=nids_init();
    if(!a)//Libnids初始化
    {
@@ -182,3 +183,4 @@ void tcp_callback(struct tcp_strea * ns,void **param);
 void tcp_callback(struct tcp_stream * ns,void ** param);
 其中参数ns表示一个TCP连接的所有信息，它的类型是tcp_stream数据结构;参数param表示要传递的连接参数信息，可以指向一个TCP连接的私有数据。
 此回调函数接受到的TCP数据存放在half_stream的缓存中，应该马上取出来，一旦此回调函数返回，此数据缓存中存储的数据就不存在了。half_stream成员offset描述了被丢弃的数据字节数。如果不想马上取出来，而是等到存储到一定量的数据之后再取出来，那么可以使用函数nids_discard(struct tcp_stream * a_tcp,int num_bytes)来处理。这样，回调函数返回时，Libnids将丢弃缓存数据之前的num_bytes字节的数据。如果不掉用nisd_discard()函数，那么缓存数据的字节应该为count_new字节。一般情况下，缓存中的数据应该是count_offset字节。*/
+
