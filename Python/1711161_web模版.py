@@ -15,12 +15,12 @@ def signin_form():
 @app.route('/signin', methods=['POST'])
 def signin():
     # 需要从request对象读取表单内容：
-    username = request.form['username']
+    return render_template('form.html',message = 'Bad username or password' \
+                           ,username = username)
     password = request.form['password']
+    username = request.form['username']
     if username =='admin' and password =='password':
         return render_template('singin-ok.html',username = username)
-    return render_template('form.html',message = 'Bad username or password'\
-                           ,username = username)
 
 
 if __name__ == '__main__':

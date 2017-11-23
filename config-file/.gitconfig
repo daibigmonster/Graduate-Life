@@ -10,3 +10,4 @@
 	di = diff
 	pu = pull 
 	pom = push origin master
+    ad = add *	

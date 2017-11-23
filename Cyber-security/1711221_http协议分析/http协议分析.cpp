@@ -35,6 +35,36 @@ void http_callback(struct tcp_stream* tcp_http_conection
 		cout << address_content << " 连接被RST关闭\n";
 		return;
 	}
+	if(tcp_http_conection->nids_state == NIDS_DATA)
+	{
+		struct half_stream* hlf;
+		if(tcp_http_conection->client.count_new)
+		{
+			hlf = &tcp_http_conection->client;//hlf表示浏览器接收的数据
+			address_content = inet_ntoa(*((struct in_addr *)&(ip_and_port.saddr)));
+			address_content = address_content + " : " + to_string(ip_and_port.source);
+			address_content += "<--->";
+			address_content += inet_ntoa(*((struct in_addr *)&(ip_and_port.daddr)));
+			address_content = address_content + " : " + to_string(ip_and_port.dest);
+			address_content += "\n\n";
+			cout << address_content ;
+			cout << "浏览器接收数据..\n\n";
+		}
+		else
+		{
+
+			hlf = &tcp_http_conection->server;//hlf表示Web服务器的TCP连接端
+			address_content = inet_ntoa(*((struct in_addr *)&(ip_and_port.saddr)));
+			address_content = address_content + " : " + to_string(ip_and_port.source);
+			address_content += "<--->";
+			address_content += inet_ntoa(*((struct in_addr *)&(ip_and_port.daddr)));
+			address_content = address_content + " : " + to_string(ip_and_port.dest);
+			address_content += "\n";
+			cout << address_content ;
+			cout << "服务器接收数据..\n\n";
+		
+		}
+	}
 }
 
 

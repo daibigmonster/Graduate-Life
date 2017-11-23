@@ -4,7 +4,7 @@ bot = Bot()
 
 GF = bot.friends().search('管小洋',sex = FEMALE)[0]
 GF.send('戴涧微信机器人上线测试')
-GF.send('随便回复一句话')
+GF.send('让我们开始聊天吧！')
 
 tuling = Tuling(api_key='d68ebf6b345a4b2c9a3ed4e35e045e55')
 

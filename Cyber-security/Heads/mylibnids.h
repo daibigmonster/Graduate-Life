@@ -35,7 +35,6 @@
 	操作的，默认值为168
 	int dev_addon;
 	void (*syslog){};这是一个函数指针，默认值为nids_syslog()函数。在syslog函数中可以
-加测入侵攻击，如网络扫描攻击，也可以检测一些异常情况，如无效TCP标记
 	int suslog_level;
 	int scan_num_hosts;
 	int scan_delay;
@@ -103,7 +102,7 @@ struct half_stream
 	char *data;
 	int offset;
 	int count;
-	int count_now;
+	int count_new;
 	int bufsize;
 	int rmen_alloc;
 	u_int acked;
@@ -125,8 +124,7 @@ struct half_stream
 /*
 struct tcp_stream
 {
-	struct suple4 addr;
-//	成员nids_state 表示连接的逻辑状态
+	struct suple4 addr;//	成员nids_state 表示连接的逻辑状态
 //	NIDS_JUST_SET 标识TCP链接建立，在此状态下就可以决定是否
  * 对TCP连接进行数据分析，可以决定是否捕获TCP客户端接收的数据
  * TCP服务器端接收的数据、TCP客户接收的紧急数据或者
