@@ -1,16 +1,24 @@
-import socket
-target_host = "www.baidu.com"
-target_port = 80
+from urllib.request import urlopen
+from urllib.error import HTTPError
+from bs4 import BeautifulSoup
+import codecs
 
-#建立一个socket对象
-client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
-#链接客户端
-client.connect((target_host,target_port))
+def getTitle(url):
+    try:
+        html = urlopen(url)
+    except HTTPError as e:
+        return None
+    try:
+        bsobj = BeautifulSoup(html.read(),"lxml")
+        namelist = bsobj.find("div",{"id":"content"})
+    except AttributeError as e:
+        return None
+    return namelist
 
-#发送一些数据
-client.send(b'GET / HTTP/1.1\r\n\Host:baidu.com\r\n\r\n')
 
-response = client.recv(4096)
-
-print(response)
+namelist = getTitle("http://www.xs.la/1_1212/738017.html")
+if namelist == None:
+    print("Title could not be found")
+else:
+    print(namelist)
