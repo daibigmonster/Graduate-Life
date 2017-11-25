@@ -17,7 +17,7 @@ void http_callback(struct tcp_stream* tcp_http_conection
 	if(tcp_http_conection -> nids_state == NIDS_JUST_EST)
 	{
 		if(tcp_http_conection->addr.dest != 80)return;
-		tcp_http_conection->client.collect++;
+	BK	tcp_http_conection->client.collect++;
 		tcp_http_conection->server.collect++;
 		cout << "\n\n\n----------------------------------\n";
 		cout << address_content << " 建立连接\n";
