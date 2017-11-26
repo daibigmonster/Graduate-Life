@@ -27,4 +27,3 @@ def main():
     for item in parse_one_page(html):
         write_to_json(item)
 
-main()
