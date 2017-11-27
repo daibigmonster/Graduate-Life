@@ -89,6 +89,8 @@ class Crawler(object):
                 print(f_name,'已经存在，略过')
             else:
                 print(f_name,'正在下载')
+
+
             if html != None:
                 with open(f_name, 'wb') as f:
                     f.write(html)
