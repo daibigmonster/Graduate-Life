@@ -72,11 +72,11 @@ class Spider(object):
         """
         raise NotImplementedError
 
-    def save_pdf(self, htmls):
+    def save_pdf(self, htmls,noveldir):
         """
         将html文件生成pdf文件
         :param htmls: html文件
-        :param file_name: 文件名
+        :param noveldir: 小说存放路径
         :return:
         """
 
@@ -85,31 +85,39 @@ class Spider(object):
     def run(self):
         start = time.time()
         count = 0
-        noveldir = self.store_path + self.name
-        if not os.path.exists(noveldir):
-            os.system('mkdir {}'.format(noveldir))
-        recoders = self.parse_menu(self.request(self.start_url))
         htmls = []
-        for recoder in recoders:
-            count += 1
-            filepath='{0}/{1}{2}.html'.format(noveldir,str(count),recoder[1])
-            filename = ''.join([str(count),recoder[1]])
+        datadir = self.store_path + "data"
+        noveldir = self.store_path + self.name
+        if not os.path.exists(noveldir) :
+            os.system('mkdir {}'.format(noveldir))
+        if not os.path.exists(datadir) :
+            os.system('mkdir {}'.format(datadir))
+        recoders = self.parse_menu(self.request(self.start_url))
+        for index,recoder in enumerate(recoders):
+            # print(index,recoder[1])
+            filepath = '{0}/{1}{2}.html'.format(datadir, str(index + 1), recoder[1])
+            htmls.append(filepath)
             if os.path.exists(filepath):
-                print(count, '{} 已经存在'.format(recoder[1]))
+                print(index + 1, '{} 已经存在'.format(recoder[1]))
             else:
-                print(count, '{} 正在下载'.format(recoder[1]))
+                print(index + 1, '{} 正在下载'.format(recoder[1]))
                 response = self.request(recoder[0])
                 if response != None:
                     html = self.parse_body(response)
                     with open(filepath, 'wb') as f:
                         f.write(html)
                     time.sleep(0.5)
-                    htmls.append(filepath)
                 else:
                     print('超时，略过')
-                    continue
 
-        self.save_pdf(htmls)
+        #
+        # for recoder in recoders:
+        #     count += 1
+        #     if count >= 1200:
+        #         filepath='{0}/{1}{2}.html'.format(noveldir,str(count),recoder[1])
+        #         filename = ''.join([str(count),recoder[1]])
+        self.save_pdf(htmls,noveldir)
+
         total_time = time.time() - start
         print(u"总共耗时：%f 秒" % total_time)
 
@@ -131,15 +139,12 @@ class LingaoqimingSpider(Spider):
     def parse_body(self, response):
         soup = BeautifulSoup(response.content, "html.parser")
         content = str(soup.find(id = "content"))
-        #content = re.sub('<br/>.*?<br/>', '\n',content)
         content = re.sub('<script.*?></script>', '', content)
-        #content = content.replace('<div id="content">','')
-        #content = content.replace('</div>','')
         html = html_template.format(content = content)
         html = html.encode('utf-8')
         return html
 
-    def save_pdf(self, htmls):
+    def save_pdf(self, htmls ,noveldir):
         options = {
             'page-size': 'Letter',
             'margin-top': '0.75in',
@@ -156,14 +161,26 @@ class LingaoqimingSpider(Spider):
             ],
             'outline-depth': 10,
         }
-        pdfkit.from_file(htmls,self.name + ".pdf", options=options)
-        # for html in htmls:
-        #     os.remove(html)
+        if len(htmls) <= 1000:
+            f_name = "{0}/{1}.pdf".format(noveldir,self.name)
+            print("开始生成",f_name)
+            pdfkit.from_file(htmls,f_name, options=options)
+        else:
+            for i in range(0,len(htmls),500):
+                html = htmls[i : i + 500]
+                f_name = "{0}/{1}{2}.pdf".format(noveldir,self.name,str(int(i/500)+1))
+                print("开始生成",f_name)
+                pdfkit.from_file(html, f_name, options=options)
+
+
+
+                # for html in htmls:
+                #     os.remove(html)
 
 def main():
     start_url = 'http://www.xs.la/1_1212/'  # 小说的首页，从首页就可以抓取目录
     # start_url = 'http://www.xs.la/1_1212/4931181.html'  # 小说的首页，从首页就可以抓取目录
-    spider_obj = LingaoqimingSpider("临高启明", start_url,'/home/dai/文档/小说')
+    spider_obj = LingaoqimingSpider("临高启明", start_url,'/home/daimonster/文档/小说')
     #spider_obj = spider_obj.parse_body(spider_obj.request("http://www.xs.la/1_1212/738232.html"),"测试")
     spider_obj.run()
 
