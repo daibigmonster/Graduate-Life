@@ -27,7 +27,7 @@ def make_list(html):
 #需要改成小说名字
 	for item in items:
 		#print(item)
-		url=base_url+item[0]
+		url=base_url+item[0]#item[0]为地址，item[1]为章节名
 		cur.execute('select * from 临高启明 where address=?',(url,))#需要改成小说名字
 		values=cur.fetchall()
 		if values==[]:
@@ -86,9 +86,7 @@ def main():
 			if sourcecode!=None:
 				parse_one_page(bookpath,sourcecode)
 				time.sleep(0.5)
-			else:
-				print(bookpath,'超时，略过')
-				continue
+			
 			
 
 main()

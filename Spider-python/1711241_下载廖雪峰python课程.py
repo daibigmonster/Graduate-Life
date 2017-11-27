@@ -85,9 +85,20 @@ class Crawler(object):
         for index,url in enumerate(menus):
             html = self.parse_body(self.request(url))
             f_name = ".".join([str(index),"html"])
-            with open(f_name,'wb') as f:
-                f.write(html)
-            htmls.append(f_name)
+            if os.path.exists(f_name):
+                print(f_name,'已经存在，略过')
+            else:
+                print(f_name,'正在下载')
+            if html != None:
+                with open(f_name, 'wb') as f:
+                    f.write(html)
+                time.sleep(0.5)
+                htmls.append(f_name)
+            else:
+                print(f_name, '超时，略过')
+                continue
+
+
 
         pdfkit.from_file(htmls,self.name + ".pdf", options = options)
         for html in htmls:
@@ -106,7 +117,8 @@ class LiaoxuefengPythonCrawler(Crawler):
         :return: url生成器
         """
         soup = BeautifulSoup(response.content, "html.parser")
-        menu_tag = soup.find_all(class_ = "uk-nav uk-nav-side")[1]
+        #menu_tag = soup.find_all(class_ = "uk-nav uk-nav-side")[1]
+        menu_tag = soup.find(style = "margin-right:-15px;")
         urls = []
         for div in menu_tag.find_all("div"):
             url = div.a.get("href")
