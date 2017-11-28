@@ -8,8 +8,8 @@ import sqlite3
 from requests.exceptions import RequestException
 import pdfkit
 import click
-import logging
-
+from multiprocessing import Process
+from multiprocessing import Pool
 
 html_template = """
 <!DOCTYPE html>
@@ -82,22 +82,9 @@ class Spider(object):
         :param noveldir: 小说存放路径
         :return:
         """
-
         raise NotImplementedError
 
-
-    def run(self):
-        start = time.time()
-        htmls = []
-        datadir = self.store_path + "data"
-        noveldir = self.store_path + self.name
-        if not os.path.exists(noveldir) :
-            os.system('mkdir {}'.format(noveldir))
-        if not os.path.exists(datadir) :
-            os.system('mkdir {}'.format(datadir))
-        recoders = self.parse_menu(self.request(self.start_url))
-
-
+    def multi_process_download(self,recoders,datadir,noveldir):
         for index,recoder in enumerate(recoders):
             # print(index,recoder[1])
             filepath = '{0}/{1}{2}.html'.format(datadir, str(index + 1), recoder[1])
@@ -114,6 +101,32 @@ class Spider(object):
                     time.sleep(0.5)
                 else:
                     print('超时，略过')
+        self.save_pdf(htmls, noveldir)
+
+
+    def run(self):
+        start = time.time()
+        htmls = []
+        datadir = self.store_path + "data"
+        noveldir = self.store_path + self.name
+        if not os.path.exists(noveldir) :
+            os.system('mkdir {}'.format(noveldir))
+        if not os.path.exists(datadir) :
+            os.system('mkdir {}'.format(datadir))
+        recoders = self.parse_menu(self.request(self.start_url))
+        if len(recoders) <= 500:
+            self.multi_process_download(recoders,datadir,noveldir)
+        else:
+            p = pool(4)
+            for i in range(0,len(recoders),500):
+                recoder = recoders[i: i + 500]
+                p.apply_async(self.multi_process_download, args=(recoder,datadir,noveldir))
+            print('Waiting for all subprocesses done...')
+            p.close()
+            p.join()
+            print('All subprocesses done.')
+
+
 
         #
         # for recoder in recoders:
