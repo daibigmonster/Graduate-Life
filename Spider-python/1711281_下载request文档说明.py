@@ -8,7 +8,6 @@ import sqlite3
 from requests.exceptions import RequestException
 import pdfkit
 import click
-import logging
 
 
 html_template = """
@@ -124,42 +123,33 @@ class Spider(object):
         total_time = time.time() - start
         print(u"总共耗时：%f 秒" % total_time)
 
-class LingaoqimingSpider(Spider):
+class RequestSpider(Spider):
     """
-    临高启明下载
+    Request文档说明下载
     """
     def parse_menu(self, response):
-        soup = BeautifulSoup(response.content, "html.parser")
-        menu_tag = soup.find(id = "list")
-        recoders = []
-        for dd in menu_tag.find_all("dd"):
-            url = dd.a.get("href")
-            if not url.startswith("http"):
-                url = "".join([self.domain, url])
-            recoders.append([url,dd.get_text()])
-        return recoders
+        if response == None:
+            print("传入空内容")
+            return None
+        else:
+            soup = BeautifulSoup(response.content, "html.parser")
+            menu_tag = soup.find(class_ = "headerlink",id = "id3")
+            recoders = []
+            for li in menu_tag.find_all("li"):
+                url = li.a.get("href")
+                if not url.startswith("http"):
+                    url = "".join([self.domain, url])
+                recoders.append([url,dd.get_text()])
+            return recoders
+
 
     def parse_body(self, response):
-        try:
-            soup = BeautifulSoup(response.content, "html.parser")
-            body = soup.find(id = "content")
-
-            #加入标题居中显示
-            title = str(soup.find(class_ = 'bookname'))
-            title = re.findall("<h1>(.*?)</h1>",title)[0]
-            center_tag = soup.new_tag("center")
-            title_tag = soup.new_tag('h1')
-            title_tag.string = title
-            center_tag.insert(1, title_tag)
-            body.insert(0, center_tag)
-
-            content = str(body)
-            content = re.sub('<script.*?></script>', '', content)
-            html = html_template.format(content = content)
-            html = html.encode('utf-8')
-            return html
-        except Exception as e:
-            logging.error("解析错误", exc_info=True)
+        soup = BeautifulSoup(response.content, "html.parser")
+        content = str(soup.find(id = "content"))
+        content = re.sub('<script.*?></script>', '', content)
+        html = html_template.format(content = content)
+        html = html.encode('utf-8')
+        return html
 
     def save_pdf(self, htmls ,noveldir):
         options = {
@@ -192,17 +182,23 @@ class LingaoqimingSpider(Spider):
 
 # @click.command()
 # @click.option('--filename', prompt='输入PDF文件的保存名称', help='不需要后缀.pdf，只需要提供名称即可')
-# @click.option('--url', prompt='输入要爬取的网页地址', help='需要爬去的网页的目录地址')
+# @click.option('--url', prompt='输入要爬取的网页地址', help='需要爬去的网页的主页地址')
 # @click.option('--storepath', prompt='输入PDF文件的保存地址', help='保存文件的绝对路径')
 # def main(filename,url,storepath):
-#     spider_obj = LingaoqimingSpider(filename, url,storepath)
+#     spider_obj = RequestSpider(filename, url,storepath)
 #     spider_obj.run()
+
+
 def main():
-    filename = '临高启明'
-    url = 'http://www.xs.la/1_1212/'
-    storepath = '/home/dai/文档/小说'
-    spider_obj = LingaoqimingSpider(filename, url,storepath)
+    spider_obj = RequestSpider("Request库中文说明文档", \
+                 "http://docs.python-requests.org/zh_CN/latest/"\
+                 ,"/home/dai/文档/计算机书籍")
+
+    reponse = spider_obj.request('http://docs.python-requests.org/zh_CN/latest/index.html#')
+    for html in spider_obj.parse_menu(reponse):
+        print(html)
     spider_obj.run()
+
 
 
 if __name__ == '__main__':
