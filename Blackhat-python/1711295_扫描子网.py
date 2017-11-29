@@ -1,6 +1,6 @@
 import threading
 import time
-from netaddr import  IPNetwork,IPAddress
+from netaddr import IPNetwork,IPAddress
 import socket
 import os
 import struct
@@ -62,21 +62,23 @@ def udp_sender(subnet,magic_message):
     sender = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
     for ip in IPNetwork(subnet):
         try:
-            sender.sendto(magic_message,("%s" % ip,65512))
+            sender.sendto(magic_message,("%s" % ip,65212))
+            print("%s" % ip,"已经发送")
         except:
+            print("%s" % ip,"没有发出")
             pass
 
 
 socket_protocol = socket.IPPROTO_ICMP
 sniffer = socket.socket(socket.AF_INET,socket.SOCK_RAW,socket_protocol)
-sniffer.bind((host,0))
+sniffer.bind((host,65212))
 sniffer.setsockopt(socket.IPPROTO_IP,socket.IP_HDRINCL,1)
 #1大概表示1个数据包
 
 
-#开始发送数据包
-t = threading.Thread(target=udp_sender,args=(subnet,magic_message))
-t.start()
+# #开始发送数据包
+# t = threading.Thread(target=udp_sender,args=(subnet,magic_message))
+# t.start()
 
 try:
     while True:
