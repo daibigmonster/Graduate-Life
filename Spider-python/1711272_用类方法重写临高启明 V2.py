@@ -199,11 +199,18 @@ class LingaoqimingSpider(Spider):
 # def main(filename,url,storepath):
 #     spider_obj = LingaoqimingSpider(filename, url,storepath)
 #     spider_obj.run()
+# def main():
+#     filename = '从零开始'
+#     url = 'http://www.xs.la/2_2691/'
+#     storepath = '/home/daimonster/文档/小说'
+#     spider_obj = LingaoqimingSpider(filename, url,storepath)
+#     spider_obj.run()
+
 def main():
-    filename = '从零开始'
-    url = 'http://www.xs.la/2_2691/'
-    storepath = '/home/dai/文档/小说'
-    spider_obj = LingaoqimingSpider(filename, url,storepath)
+    filename = '临高启明'
+    url = 'http://www.xs.la/1_1212/'
+    storepath = '/home/daimonster/文档/小说'
+    spider_obj = LingaoqimingSpider(filename, url, storepath)
     spider_obj.run()
 
 

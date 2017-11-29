@@ -75,6 +75,25 @@ class Spider(object):
         """
         raise NotImplementedError
 
+
+    def multi_process_download(self,num,recoders,datadir):
+        for index,recoder in enumerate(recoders):
+            # print(index,recoder[1])
+            index += (num + 1)
+            filepath = '{0}/{1}{2}.html'.format(datadir, str(index), recoder[1])
+            if os.path.exists(filepath):
+                print(index, '{} 已经存在'.format(recoder[1]))
+            else:
+                print(index, '{} 正在下载'.format(recoder[1]))
+                response = self.request(recoder[0])
+                if response != None:
+                    html = self.parse_body(response)
+                    with open(filepath, 'wb') as f:
+                        f.write(html)
+                    time.sleep(0.5)
+                else:
+                    print('超时，略过')
+
     def save_pdf(self, htmls,noveldir):
         """
         将html文件生成pdf文件
@@ -84,24 +103,6 @@ class Spider(object):
         """
         raise NotImplementedError
 
-    def multi_process_download(self,recoders,datadir,noveldir):
-        for index,recoder in enumerate(recoders):
-            # print(index,recoder[1])
-            filepath = '{0}/{1}{2}.html'.format(datadir, str(index + 1), recoder[1])
-            htmls.append(filepath)
-            if os.path.exists(filepath):
-                print(index + 1, '{} 已经存在'.format(recoder[1]))
-            else:
-                print(index + 1, '{} 正在下载'.format(recoder[1]))
-                response = self.request(recoder[0])
-                if response != None:
-                    html = self.parse_body(response)
-                    with open(filepath, 'wb') as f:
-                        f.write(html)
-                    time.sleep(0.5)
-                else:
-                    print('超时，略过')
-        self.save_pdf(htmls, noveldir)
 
 
     def run(self):
@@ -114,30 +115,32 @@ class Spider(object):
         if not os.path.exists(datadir) :
             os.system('mkdir {}'.format(datadir))
         recoders = self.parse_menu(self.request(self.start_url))
-        if len(recoders) <= 500:
-            self.multi_process_download(recoders,datadir,noveldir)
-        else:
-            p = pool(4)
-            for i in range(0,len(recoders),500):
-                recoder = recoders[i: i + 500]
-                p.apply_async(self.multi_process_download, args=(recoder,datadir,noveldir))
-            print('Waiting for all subprocesses done...')
-            p.close()
-            p.join()
-            print('All subprocesses done.')
 
 
+        #多进程下载过程
+        for i in range(6):
+            #因为经常有没有下载成功的情况所以多次下载
+            if len(recoders) <= 500:
+                self.multi_process_download(0,recoders,datadir)
+            else:
+                p = Pool(3)
+                for i in range(0,len(recoders),500):
+                    recoder = recoders[i: i + 500]
+                    p.apply_async(self.multi_process_download, args=(i,recoder,datadir))
+                print('Waiting for all subprocesses done...')
+                p.close()
+                p.join()
+                print('All subprocesses done.')
 
-        #
-        # for recoder in recoders:
-        #     count += 1
-        #     if count >= 1200:
-        #         filepath='{0}/{1}{2}.html'.format(noveldir,str(count),recoder[1])
-        #         filename = ''.join([str(count),recoder[1]])
+        #转换成pdf
+        for index, recoder in enumerate(recoders):
+            index += 1
+            filepath = '{0}/{1}{2}.html'.format(datadir, str(index), recoder[1])
+            htmls.append(filepath)
         self.save_pdf(htmls,noveldir)
-
         total_time = time.time() - start
         print(u"总共耗时：%f 秒" % total_time)
+
 
 class LingaoqimingSpider(Spider):
     """
@@ -212,10 +215,16 @@ class LingaoqimingSpider(Spider):
 # def main(filename,url,storepath):
 #     spider_obj = LingaoqimingSpider(filename, url,storepath)
 #     spider_obj.run()
+# def main():
+#     filename = '临高启明'
+#     url = 'http://www.xs.la/1_1212/'
+#     storepath = '/home/daimonster/文档/小说'
+#     spider_obj = LingaoqimingSpider(filename, url,storepath)
+#     spider_obj.run()
 def main():
     filename = '从零开始'
     url = 'http://www.xs.la/2_2691/'
-    storepath = '/home/dai/文档/小说'
+    storepath = '/home/daimonster/文档/小说'
     spider_obj = LingaoqimingSpider(filename, url,storepath)
     spider_obj.run()
 
