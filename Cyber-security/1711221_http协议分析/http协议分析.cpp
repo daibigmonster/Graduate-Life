@@ -3,8 +3,7 @@
 #include "mylibnids.h"
 using namespace std;
 
-void http_callback(struct tcp_stream* tcp_http_conection
-		,void** param)
+void http_callback(struct tcp_stream* tcp_http_conection,void** param)
 {
 	string address_content;
 	string content;

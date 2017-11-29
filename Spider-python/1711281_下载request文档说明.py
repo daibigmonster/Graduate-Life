@@ -6,8 +6,9 @@ import requests
 from bs4 import BeautifulSoup
 import sqlite3
 from requests.exceptions import RequestException
+import random
 import pdfkit
-import click
+import datetime
 
 
 html_template = """
@@ -21,8 +22,13 @@ html_template = """
 </body>
 </html>
 """
+headers = [{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0'}, \
+           {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0'},\
+           {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'},\
+           {'User-Agent':'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}
+           ]
 
-
+random.seed(datetime.datetime.now())
 class Spider(object):
     """
         爬虫基类，所有爬虫都应该继承此类
@@ -43,7 +49,7 @@ class Spider(object):
             self.store_path = store_path
         else:
             self.store_path = ''.join([store_path,'/'])
-        self.domain = '{uri.scheme}://{uri.netloc}'.format(uri=urlparse(self.start_url))
+        self.domain = start_url
 
 
     @staticmethod
@@ -53,8 +59,8 @@ class Spider(object):
         :return:
         """
         try:
-            headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0'}
-            response = requests.get(url, headers = headers,timeout= 2)
+            header = headers[random.randint(0,len(headers)-1)]
+            response = requests.get(url, headers = header,timeout= 2)
             return response
         except RequestException:
             print('出现异常')
@@ -128,19 +134,18 @@ class RequestSpider(Spider):
     Request文档说明下载
     """
     def parse_menu(self, response):
-        if response == None:
-            print("传入空内容")
-            return None
-        else:
-            soup = BeautifulSoup(response.content, "html.parser")
-            menu_tag = soup.find(class_ = "headerlink",id = "id3")
-            recoders = []
-            for li in menu_tag.find_all("li"):
-                url = li.a.get("href")
-                if not url.startswith("http"):
-                    url = "".join([self.domain, url])
-                recoders.append([url,dd.get_text()])
-            return recoders
+        soup = BeautifulSoup(response.content, "html.parser")
+        menu_tag = soup.find(class_ = "section",id = "id3")
+        # menu_tag = menu_tag.find_all("li",href=re.compile("^(user/)((?!#).)*$"))
+        recoders = []
+        for li in menu_tag.find_all("li"):
+            url = li.a.get("href")
+            if '#' in url:
+                continue
+            if not url.startswith("http"):
+                url = "".join([self.domain, url])
+            recoders.append([url,li.a.get_text()])
+        return recoders
 
 
     def parse_body(self, response):
@@ -180,24 +185,20 @@ class RequestSpider(Spider):
                 pdfkit.from_file(html, f_name, options=options)
 
 
-# @click.command()
-# @click.option('--filename', prompt='输入PDF文件的保存名称', help='不需要后缀.pdf，只需要提供名称即可')
-# @click.option('--url', prompt='输入要爬取的网页地址', help='需要爬去的网页的主页地址')
-# @click.option('--storepath', prompt='输入PDF文件的保存地址', help='保存文件的绝对路径')
-# def main(filename,url,storepath):
-#     spider_obj = RequestSpider(filename, url,storepath)
-#     spider_obj.run()
-
-
 def main():
     spider_obj = RequestSpider("Request库中文说明文档", \
                  "http://docs.python-requests.org/zh_CN/latest/"\
                  ,"/home/dai/文档/计算机书籍")
 
+
+    #（scheme = 'http', netloc = 'www.baidu.com', path = 'index.html'paramters = 'user'.query = 'id=5', fragment = 'comment'）
+    #res=urlparse('https://www.baidu.com/baidu?wd=query&tn=monline_dg&ie=utf-8')
+
     reponse = spider_obj.request('http://docs.python-requests.org/zh_CN/latest/index.html#')
     for html in spider_obj.parse_menu(reponse):
         print(html)
-    spider_obj.run()
+
+    #spider_obj.run()
 
 
 
