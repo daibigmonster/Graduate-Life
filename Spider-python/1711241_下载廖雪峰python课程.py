@@ -13,6 +13,7 @@ from multiprocessing import Pool
 import random
 import datetime
 import logging
+import datetime
 
 
 html_template = """
@@ -36,8 +37,9 @@ class Crawler(object):
     """
     name = None
     start_url = None
+    datapath = None
 
-    def __init__(self,name, start_url, store_path):
+    def __init__(self,name, start_url, store_path,datapath):
         """
         初始化
         :param :解析的url
@@ -50,6 +52,7 @@ class Crawler(object):
         else:
             self.store_path = ''.join([store_path, '/'])
         self.domain = '{uri.scheme}://{uri.netloc}'.format(uri=urlparse(self.start_url))
+        self.datapath = datapath
 
     @staticmethod
     def request(url, **kwargs):
@@ -63,6 +66,11 @@ class Crawler(object):
                 'Referer': 'https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/0014317848428125ae6aa24068b4c50a7e71501ab275d52000',
                 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0'}
             response = session.get(url, headers=headers,timeout=2)
+            while response.status_code == 503:
+                now = datetime.datetime.now()
+                print("%s 已经被屏蔽" % now.strftime('%H:%M'))
+                time.sleep(600)
+                response = session.get(url, headers=headers, timeout=2)
             return response
         except RequestException:
             time.sleep(600)
@@ -107,12 +115,12 @@ class Crawler(object):
             else:
                 print(index, '{} 正在下载'.format(recoder[0]))
                 response = self.request(recoder[1])
-                if response != None:
+                if response is not None:
                     html = self.parse_body(response)
                     with open(filepath, 'wb') as f:
                         f.write(html)
 
-                    time.sleep(1)
+                    time.sleep(5)
                 else:
                     print('超时，略过')
                     pass
@@ -181,7 +189,7 @@ class LiaoxuefengPythonCrawler(Crawler):
         return recoders
 
     def recode_to_sql(self,recoders):
-        conn = sqlite3.connect('/home/daimonster/Graduate-Life/Backup/countnum.db')
+        conn = sqlite3.connect(self.datapath)
         cur = conn.cursor()
         cur.execute('create table if not exists {} (name varchar(30),address varchar(50) primary key)'.format(self.name))
         for recoder in recoders:
@@ -194,7 +202,7 @@ class LiaoxuefengPythonCrawler(Crawler):
         conn.close()
 
     def get_from_sql(self):
-        conn = sqlite3.connect('/home/daimonster/Graduate-Life/Backup/countnum.db')
+        conn = sqlite3.connect(self.datapath)
 
         cur = conn.cursor()
         cur.execute('select * from {}'.format(self.name))
@@ -272,11 +280,12 @@ def main():
     # url = "https://foofish.net/python-crawler-html2pdf.html"
     filename = '廖雪峰Python教程'
     url = "https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000"
-    storepath = '/home/daimonster/文档/书籍'
-    spider_obj = LiaoxuefengPythonCrawler(filename,url,storepath)
+    storepath = '/home/dai/文档/书籍'
+    datapath = '/home/dai/Graduate-Life/Backup/countnum.db'
+    spider_obj = LiaoxuefengPythonCrawler(filename,url,storepath,datapath)
     # recoders = spider_obj.parse_menu(spider_obj.request(spider_obj.start_url))
     # spider_obj.recode_to_sql(recoders)
-    recoders = spider_obj.get_from_sql()
+    #recoders = spider_obj.get_from_sql()
     spider_obj.run()
 
 
