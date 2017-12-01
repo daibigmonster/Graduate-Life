@@ -82,7 +82,7 @@ class Spider(object):
             index += (num + 1)
             filepath = '{0}/{1}{2}.html'.format(datadir, str(index), recoder[1])
             if os.path.exists(filepath):
-                print(index, '{} 已经存在'.format(recoder[1]))
+                pass
             else:
                 print(index, '{} 正在下载'.format(recoder[1]))
                 response = self.request(recoder[0])
@@ -218,13 +218,19 @@ class LingaoqimingSpider(Spider):
 # def main():
 #     filename = '临高启明'
 #     url = 'http://www.xs.la/1_1212/'
+#     storepath = '/home/dai/文档/小说'
+#     spider_obj = LingaoqimingSpider(filename, url,storepath)
+#     spider_obj.run()
+# def main():
+#     filename = '从零开始'
+#     url = 'http://www.xs.la/2_2691/'
 #     storepath = '/home/daimonster/文档/小说'
 #     spider_obj = LingaoqimingSpider(filename, url,storepath)
 #     spider_obj.run()
 def main():
-    filename = '从零开始'
-    url = 'http://www.xs.la/2_2691/'
-    storepath = '/home/daimonster/文档/小说'
+    filename = '异常生物见闻录'
+    url = 'http://www.xs.la/3_3271/'
+    storepath = '/home/dai/文档/小说'
     spider_obj = LingaoqimingSpider(filename, url,storepath)
     spider_obj.run()
 

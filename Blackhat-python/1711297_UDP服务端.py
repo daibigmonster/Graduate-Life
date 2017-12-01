@@ -3,7 +3,7 @@ import socket
 bind_port = 8081
 
 
-server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+server = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
 server.bind(('',bind_port))
 
 print('waiting on port:',bind_port)
