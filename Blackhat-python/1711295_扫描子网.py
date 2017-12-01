@@ -52,7 +52,7 @@ class ICMP(Structure):
     def __init__(self,socket_buffer):
         pass
 
-host = "192.168.1.110"
+host = "192.168.1.113"
 subnet = "192.168.1.0/24"
 
 magic_message = "Congratulatons!"
@@ -64,10 +64,11 @@ def udp_sender(subnet,magic_message):
     for index,ip in enumerate(IPNetwork(subnet)):
         try:
             sender.sendto(bytes(magic_message,'utf-8'),("%s" % ip,65212))
-            # print("%s" % ip,"已经发送")
+            print("%s" % ip,"已经发送")
         except:
             # print("%s" % ip,"没有发出")
             pass
+
 
 
 socket_protocol = socket.IPPROTO_ICMP
@@ -77,12 +78,12 @@ sniffer.setsockopt(socket.IPPROTO_IP,socket.IP_HDRINCL,1)
 #1大概表示1个数据包
 
 
+
 # #开始发送数据包
 t = threading.Thread(target=udp_sender,args=(subnet,magic_message))
 i = datetime.datetime.now()
 print ("发送数据包的时间 %s:%s:%s" %(i.hour,i.minute,i.second))
 t.start()
-
 
 try:
     while True:

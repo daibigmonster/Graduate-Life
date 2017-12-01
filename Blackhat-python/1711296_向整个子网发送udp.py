@@ -15,9 +15,9 @@ def udp_sender(subnet,magic_message):
     for ip in IPNetwork(subnet):
         try:
             sender.sendto(magic_message,("%s" % ip,65212))
-            print("%s" % ip,"已经发送")
+            # print("%s" % ip,"已经发送")
         except:
-            print("%s" % ip,"没有发出")
+            # print("%s" % ip,"没有发出")
             pass
 
 def main():

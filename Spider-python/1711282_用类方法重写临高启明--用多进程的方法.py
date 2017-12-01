@@ -10,6 +10,9 @@ import pdfkit
 import click
 from multiprocessing import Process
 from multiprocessing import Pool
+import random
+import datetime
+
 
 html_template = """
 <!DOCTYPE html>
@@ -22,6 +25,11 @@ html_template = """
 </body>
 </html>
 """
+headers = [{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0'}, \
+           {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0'},\
+           {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'},\
+           {'User-Agent':'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}
+           ]
 
 
 class Spider(object):
@@ -46,7 +54,6 @@ class Spider(object):
             self.store_path = ''.join([store_path,'/'])
         self.domain = '{uri.scheme}://{uri.netloc}'.format(uri=urlparse(self.start_url))
 
-
     @staticmethod
     def request(url, **kwargs):
         """
@@ -54,8 +61,8 @@ class Spider(object):
         :return:
         """
         try:
-            headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0'}
-            response = requests.get(url, headers = headers,timeout= 2)
+            header = headers[random.randint(0, len(headers) - 1)]
+            response = requests.get(url, headers=header, timeout=2)
             return response
         except RequestException:
             print('出现异常')
