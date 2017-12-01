@@ -65,8 +65,8 @@ class Crawler(object):
             response = session.get(url, headers=headers,timeout=2)
             return response
         except RequestException:
-            print("出现异常")
-            return None
+            time.sleep(600)
+            session.get(url, headers=headers,timeout=2)
 
     def recode_to_sql(self,recoders):
         """
@@ -112,7 +112,7 @@ class Crawler(object):
                     with open(filepath, 'wb') as f:
                         f.write(html)
 
-                    time.sleep(10)
+                    time.sleep(1)
                 else:
                     print('超时，略过')
                     pass
