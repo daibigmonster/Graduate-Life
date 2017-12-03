@@ -73,8 +73,8 @@ class Crawler(object):
                 response = session.get(url, headers=headers, timeout=2)
             return response
         except RequestException:
-            print("出现异常")
-            return None
+            time.sleep(600)
+            session.get(url, headers=headers,timeout=2)
 
     def recode_to_sql(self,recoders):
         """
