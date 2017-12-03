@@ -1,29 +1,25 @@
-import requests
-import re
-import json
+from selenium import webdriver
+from selenium.webdriver import ActionChains
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait
+import time
 
-def get_one_page(url):
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.text
-    return None
 
-def parse_one_page(html):
-    pattern=re.compile('<dd>.*?href="(.*?)">(.*?)</a></dd>',re.S)
-    items=re.findall(pattern,html)
-    for item in items:
-         yield {
-            '网址': item[0],
-            '章节名': item[1]
-        }
-
-def write_to_json(content):
-    with open('result.txt', 'ab') as f:
-        f.writeline(json.dumps(content, ensure_ascii=False,).encode('utf-8'))
-
-def main():
-    url = 'http://www.xs.la/1_1212/'
-    html = get_one_page(url)
-    for item in parse_one_page(html):
-        write_to_json(item)
-
+try:
+    browser = webdriver.Chrome()
+    url = 'https://www.zhihu.com/explore'
+    browser.get(url)
+    print(browser.get_cookies())
+    browser.add_cookie({'name':'dai','value':'123'})#一定要记得有value否则会报错
+    print(browser.get_cookies())
+    browser.delete_all_cookies()
+    print(browser.get_cookies())
+    # wait = WebDriverWait(browser,10)
+    # intput = wait.until(EC.presence_of_element_located((By.ID,'q')))
+    # button = wait.until(EC.element_to_be_clickable((By.,'***')))
+    # answer = browser.find_elements_by_class_name('zh-summary')[1]
+finally:
+    browser.close()
