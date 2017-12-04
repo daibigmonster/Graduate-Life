@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 import sqlite3
 from requests.exceptions import RequestException
 import pdfkit
-import click
+# import click
 from multiprocessing import Process
 from multiprocessing import Pool
 import random
@@ -237,7 +237,7 @@ class LingaoqimingSpider(Spider):
 def main():
     filename = '异常生物见闻录'
     url = 'http://www.xs.la/3_3271/'
-    storepath = '/home/dai/文档/小说'
+    storepath = '/home/ubuntu/文档/小说'
     spider_obj = LingaoqimingSpider(filename, url,storepath)
     spider_obj.run()
 

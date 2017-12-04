@@ -38,4 +38,4 @@ class Myspider(scrapy.Spider):
         tds2 = BeautifulSoup(response.content, "html.parser").find_all('div',class_='l')
         tds3 = BeautifulSoup(response.content, "html.parser").find_all('div',class_='r')
         for td in tds1:
-            novelname = 
+            novelname =

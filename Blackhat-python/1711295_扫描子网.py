@@ -52,7 +52,7 @@ class ICMP(Structure):
     def __init__(self,socket_buffer):
         pass
 
-host = "192.168.1.113"
+host = "192.168.1.102"
 subnet = "192.168.1.0/24"
 
 magic_message = "Congratulatons!"
@@ -64,7 +64,7 @@ def udp_sender(subnet,magic_message):
     for index,ip in enumerate(IPNetwork(subnet)):
         try:
             sender.sendto(bytes(magic_message,'utf-8'),("%s" % ip,65212))
-            print("%s" % ip,"已经发送")
+            #print("%s" % ip,"已经发送")
         except:
             # print("%s" % ip,"没有发出")
             pass
