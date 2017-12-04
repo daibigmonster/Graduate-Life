@@ -5,6 +5,7 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from scrapy.exceptions import DropItem
+import  pymongo
 
 class TextPipeline(object):
     def __init__(self):
@@ -41,16 +42,3 @@ class MongoPipeline(object):
 
     def close_spider(self,spider):
         self.client.close()
-
-        db.createUser({user: 'admin', pwd: '123Qa1@#', roles: [{role: 'root', db: 'admin'}]})
-        Successfully
-        added
-        user: {
-            "user": "admin",
-            "roles": [
-                {
-                    "role": "root",
-                    "db": "admin"
-                }
-            ]
-        }
