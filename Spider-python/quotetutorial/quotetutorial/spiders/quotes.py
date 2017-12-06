@@ -5,7 +5,9 @@ from quotetutorial.items import QuoteItem
 class QuotesSpider(scrapy.Spider):
     name = 'quotes'
     allowed_domains = ['quotes.toscrape.com']
-    start_urls = ['http://quotes.toscrape.com/']
+    # start_urls = ['http://quotes.toscrape.com/']
+    def start_requests(self):
+        yield scrapy.Request('http://quotes.toscrape.com/',self.parse)
 
     def parse(self, response):
         quotes = response.css('.quote')
@@ -17,7 +19,7 @@ class QuotesSpider(scrapy.Spider):
             item['text'] = text
             item['author'] = author
             item['tags'] = tags
-            yield  item
+            yield item
 
         next = response.css('ul.pager li.next a::attr(href)').extract_first()
         url = response.urljoin(next)
