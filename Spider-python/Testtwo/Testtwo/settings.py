@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for Testone project
+# Scrapy settings for Testtwo project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,14 +9,14 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'Testone'
+BOT_NAME = 'Testtwo'
 
-SPIDER_MODULES = ['Testone.spiders']
-NEWSPIDER_MODULE = 'Testone.spiders'
+SPIDER_MODULES = ['Testtwo.spiders']
+NEWSPIDER_MODULE = 'Testtwo.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'Testone (+http://www.yourdomain.com)'
+#USER_AGENT = 'Testtwo (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -39,23 +39,24 @@ ROBOTSTXT_OBEY = False
 #TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
-#DEFAULT_REQUEST_HEADERS = {
-#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-#   'Accept-Language': 'en',
-#}
+DEFAULT_REQUEST_HEADERS = {
+  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'Accept-Language': 'en',
+    'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36',
+    'authorization':'oauth c3cef7c66a1843f8b3a9e6a1e3160e20',
+}
 
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'Testone.middlewares.TestoneSpiderMiddleware': 543,
+#    'Testtwo.middlewares.TesttwoSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
-   'Testone.middlewares.ProxyMiddle': 543,
-   'scrapy.downloadermiddlewares.retry.RetryMiddleware':None,
-}
+#DOWNLOADER_MIDDLEWARES = {
+#    'Testtwo.middlewares.MyCustomDownloaderMiddleware': 543,
+#}
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
@@ -66,7 +67,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    'Testone.pipelines.TestonePipeline': 300,
+#    'Testtwo.pipelines.TesttwoPipeline': 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)

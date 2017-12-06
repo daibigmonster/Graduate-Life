@@ -9,7 +9,7 @@ class GoogleSpider(scrapy.Spider):
 
 
     def make_requests_from_url(self, url):
-        return scrapy.Request(url = url,meta={'download_timeout': 5},callback=self.parse)
+        return scrapy.Request(url = url,meta={'download_timeout': 5},callback=self.parse,dont_filter= True)
 
 
     def parse(self, response):

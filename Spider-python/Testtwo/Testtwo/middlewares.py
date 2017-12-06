@@ -4,12 +4,11 @@
 #
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/spider-middleware.html
-import logging
 
 from scrapy import signals
 
 
-class TestoneSpiderMiddleware(object):
+class TesttwoSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
@@ -55,16 +54,3 @@ class TestoneSpiderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
-
-class ProxyMiddle(object):
-
-    logger = logging.getLogger(__name__)
-
-    # def process_request(self,request, spider):
-    #     request.meta['proxy'] = '127.0.0.1:9743'
-    #
-    #
-
-    def process_exception(self,request,exception, spider):
-        self.logger.debug('Get Exception')
-        return request
