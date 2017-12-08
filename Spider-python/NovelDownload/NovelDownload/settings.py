@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for dingdian project
+# Scrapy settings for NovelDownload project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,14 +9,14 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'Linggaoqiming'
+BOT_NAME = 'NovelDownload'
 
-SPIDER_MODULES = ['Linggaoqiming.spiders']
-NEWSPIDER_MODULE = 'Linggaoqiming.spiders'
+SPIDER_MODULES = ['NovelDownload.spiders']
+NEWSPIDER_MODULE = 'NovelDownload.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'dingdian (+http://www.yourdomain.com)'
+#USER_AGENT = 'NovelDownload (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -42,20 +42,19 @@ ROBOTSTXT_OBEY = False
 DEFAULT_REQUEST_HEADERS = {
   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
   'Accept-Language': 'en',
-  'Cookie:UM_distinctid':'160344c7fd1c5e-0ecb4af3072b49-1f2a1709-13c680-160344c7fd25a3; tanwanhf_10515=1; tanwanhf_10516=1; tanwanhf_10517=1; twtext_10509=1; tanwanpf_10514=1; cscpvrich8662_fidx=1; 91turn_10510=1; bookid=1212; chapterid=4850020; chaptername=%25u5173%25u4E8E%25u672C%25u4E66; bcolor=; font=; size=; fontcolor=; width=; CNZZDATA1255414283=917496026-1512700964-%7C1512700964; tanwanhf_10513=2; Hm_lvt_edfe46767ffc69ab580905a1cc70ac7f=1512705918; Hm_lpvt_edfe46767ffc69ab580905a1cc70ac7f=1512706112; tanwanpf_10512=2; cscpvrich8669_fidx=1; Hm_lvt_3520c40cd08646ba527cb8debc0d5db7=1512705918; Hm_lpvt_3520c40cd08646ba527cb8debc0d5db7=1512706113',
-    'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'
+  'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36',
 }
 
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'dingdian.middlewares.DingdianSpiderMiddleware': 543,
+#    'NovelDownload.middlewares.NoveldownloadSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'dingdian.middlewares.MyCustomDownloaderMiddleware': 543,
+#    'NovelDownload.middlewares.MyCustomDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -66,20 +65,20 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'dingdian.pipelines.DingdianPipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'NovelDownload.pipelines.MongoPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
-#AUTOTHROTTLE_ENABLED = True
+AUTOTHROTTLE_ENABLED = True
 # The initial download delay
-#AUTOTHROTTLE_START_DELAY = 5
+AUTOTHROTTLE_START_DELAY = 5
 # The maximum download delay to be set in case of high latencies
-#AUTOTHROTTLE_MAX_DELAY = 60
+AUTOTHROTTLE_MAX_DELAY = 60
 # The average number of requests Scrapy should be sending in parallel to
 # each remote server
-#AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
+AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
 # Enable showing throttling stats for every response received:
 #AUTOTHROTTLE_DEBUG = False
 
@@ -90,3 +89,6 @@ DEFAULT_REQUEST_HEADERS = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+MONGO_URI = "mongodb://admin:admin123@118.126.64.234/Zhihu?authMechanism=MONGODB-CR"
+MONGO_DATABASE = 'Zhihu'
