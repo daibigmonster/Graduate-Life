@@ -1,6 +1,5 @@
 'use strict'
-var  a = 'Dai Jian';
-console.log(`Hello,${a}!`);
+var  name = 'Dai Jian';
+console.log(`Hello,${name}!`);
 
 
-11111
