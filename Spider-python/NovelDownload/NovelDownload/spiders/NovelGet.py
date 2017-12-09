@@ -18,7 +18,7 @@ class NovelgetSpider(scrapy.Spider):
     Novle_list_urls = ['https://www.xs.la/1_1212/',
                       'https://www.xs.la/3_3271/',
                       'https://www.xs.la/2_2691/']
-   
+
 
 
     def start_requests(self):
