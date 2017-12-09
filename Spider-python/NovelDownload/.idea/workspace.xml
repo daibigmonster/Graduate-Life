@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="896b13d7-797e-4870-b67a-b174c03bbf2a" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/../../Web/1712091_hello.js" afterPath="$PROJECT_DIR$/../../Web/1712091_hello.js" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -136,6 +134,14 @@
       <option name="presentableId" value="Default" />
       <updated>1512726554367</updated>
     </task>
+    <task id="LOCAL-00001" summary="pycharm git 测试">
+      <created>1512822432613</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1512822432613</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -163,6 +169,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="pycharm git 测试" />
+    <option name="LAST_COMMIT_MESSAGE" value="pycharm git 测试" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
