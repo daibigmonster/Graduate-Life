@@ -21,5 +21,9 @@ var arry = ['dai','guan','baidu','alibaba','tencent']
 for(var key in arry){
     console.log(key);
     console.log(arry[key]);
-
 }
+
+var m = new Map([[1, 'x'], [2, 'y'], [3, 'z']]);
+m.forEach(function (value, key, map) {
+    console.log(value + key);
+});
