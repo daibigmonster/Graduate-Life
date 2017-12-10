@@ -58,14 +58,4 @@ console.log(city);
 console.log(zipcode);
 console.log(person.age())
 
-var winthis = this;
-function getAge() {
-    var y = new Date().getFullYear();
-    return y - this.birth;
-}
 
-var xiaoming = {
-    name: '小明',
-    birth: 1990,
-    age: getAge
-};
