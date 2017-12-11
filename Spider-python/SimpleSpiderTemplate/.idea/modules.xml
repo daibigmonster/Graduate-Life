@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/SimpleSpiderTemplate.iml" filepath="$PROJECT_DIR$/.idea/SimpleSpiderTemplate.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../scrapySpiderenv/weibosearch/.idea/weibosearch.iml" filepath="$PROJECT_DIR$/../../scrapySpiderenv/weibosearch/.idea/weibosearch.iml" />
     </modules>
   </component>
 </project>
