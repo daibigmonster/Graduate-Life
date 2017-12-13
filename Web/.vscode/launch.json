@@ -22,16 +22,6 @@
             ]
         },
         {
-            "type": "java",
-            "name": "Java launch",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "console": "internalConsole",
-            "stopOnEntry": false,
-            "mainClass": "",
-            "args": ""
-        },
-        {
             "type": "node",
             "request": "launch",
             "name": "JS Launch",
