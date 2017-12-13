@@ -113,7 +113,8 @@ class Spider(object):
 
 
     def run(self):
-        start = time.time()
+        print('开始下载 %s (%s)...' % (self.name, os.getpid()))
+        # start = time.time()
         htmls = []
         datadir = self.store_path + "data"
         noveldir = self.store_path + self.name
@@ -145,11 +146,11 @@ class Spider(object):
             filepath = '{0}/{1}{2}.html'.format(datadir, str(index), recoder[1])
             htmls.append(filepath)
         self.save_pdf(htmls,noveldir)
-        total_time = time.time() - start
-        print(u"总共耗时：%f 秒" % total_time)
+        # total_time = time.time() - start
+        # print(u"总共耗时：%f 秒" % total_time)
 
 
-class LingaoqimingSpider(Spider):
+class SubSpider(Spider):
     """
     临高启明下载
     """
@@ -214,36 +215,32 @@ class LingaoqimingSpider(Spider):
                 print("开始生成",f_name)
                 pdfkit.from_file(html, f_name, options=options)
 
-
-# @click.command()
-# @click.option('--filename', prompt='输入PDF文件的保存名称', help='不需要后缀.pdf，只需要提供名称即可')
-# @click.option('--url', prompt='输入要爬取的网页地址', help='需要爬去的网页的目录地址')
-# @click.option('--storepath', prompt='输入PDF文件的保存地址', help='保存文件的绝对路径')
-# def main(filename,url,storepath):
-#     spider_obj = LingaoqimingSpider(filename, url,storepath)
-#     spider_obj.run()
-# def main():
-#     filename = '临高启明'
-#     url = 'http://www.xs.la/1_1212/'
-#     storepath = '/home/dai/文档/小说'
-#     spider_obj = LingaoqimingSpider(filename, url,storepath)
-#     spider_obj.run()
-# def main():
-#     filename = '从零开始'
-#     url = 'http://www.xs.la/2_2691/'
-#     storepath = '/home/daimonster/文档/小说'
-#     spider_obj = LingaoqimingSpider(filename, url,storepath)
-#     spider_obj.run()
 def main():
+
+    storepath = '/home/dai/文档/小说'
     filename = '异常生物见闻录'
-    url = 'http://www.xs.la/3_3271/'
-    storepath = '/home/ubuntu/文档/小说'
-    spider_obj = LingaoqimingSpider(filename, url,storepath)
-    spider_obj.run()
+    url = 'https://www.xs.la/3_3271/'
+    spider_yichang = SubSpider(filename, url,storepath)
+    # spider_lingao.run()
+    filename = '从零开始'
+    url = 'https://www.xs.la/2_2691/'
+    spider_congling = SubSpider(filename, url,storepath)
+    # spider_obj.run()
+    filename = '临高启明'
+    url = 'https://www.xs.la/1_1212/'
+    spider_lingao = SubSpider(filename, url,storepath)
+    spider = [
+        spider_lingao,
+        spider_yichang,
+        spider_congling,
+    ]
+    start = time.time()
+    for obj in spider:
+        obj.run()
+    total_time = time.time() - start
+    print('所有小说生成pdf完成')
+    print(u"总共耗时：%f 秒" % total_time)
 
 
 if __name__ == '__main__':
     main()
-
-
-
