@@ -25,7 +25,7 @@
             "type": "node",
             "request": "launch",
             "name": "JS Launch",
-            "program": "${workspaceFolder}/1712091_hello.js"
+            "program": "/home/dai/Graduate-Life/Web/Test.js"
         }
     ]
 }
