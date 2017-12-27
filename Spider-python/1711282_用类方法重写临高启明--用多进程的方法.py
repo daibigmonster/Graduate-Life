@@ -218,21 +218,21 @@ class SubSpider(Spider):
 def main():
 
     storepath = '/home/dai/文档/小说'
-    filename = '异常生物见闻录'
-    url = 'https://www.xs.la/3_3271/'
-    spider_yichang = SubSpider(filename, url,storepath)
+    #filename = '异常生物见闻录'
+    #url = 'https://www.xs.la/3_3271/'
+    #spider_yichang = SubSpider(filename, url,storepath)
     # spider_lingao.run()
-    filename = '从零开始'
-    url = 'https://www.xs.la/2_2691/'
-    spider_congling = SubSpider(filename, url,storepath)
+    #filename = '从零开始'
+    #url = 'https://www.xs.la/2_2691/'
+    #spider_congling = SubSpider(filename, url,storepath)
     # spider_obj.run()
     filename = '临高启明'
     url = 'https://www.xs.la/1_1212/'
     spider_lingao = SubSpider(filename, url,storepath)
     spider = [
         spider_lingao,
-        spider_yichang,
-        spider_congling,
+    #    spider_yichang,
+    #    spider_congling,
     ]
     start = time.time()
     for obj in spider:
