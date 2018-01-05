@@ -22,20 +22,10 @@
             ]
         },
         {
-            "type": "java",
-            "name": "Java launch",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "console": "internalConsole",
-            "stopOnEntry": false,
-            "mainClass": "",
-            "args": ""
-        },
-        {
             "type": "node",
             "request": "launch",
             "name": "JS Launch",
-            "program": "${workspaceFolder}/1712091_hello.js"
+            "program": "/home/dai/Graduate-Life/Web/Test.js"
         }
     ]
 }

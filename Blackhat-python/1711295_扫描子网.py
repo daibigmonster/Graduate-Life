@@ -52,7 +52,7 @@ class ICMP(Structure):
     def __init__(self,socket_buffer):
         pass
 
-host = "192.168.1.102"
+host = "192.168.1.112"
 subnet = "192.168.1.0/24"
 
 magic_message = "Congratulatons!"
