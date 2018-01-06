@@ -40,8 +40,15 @@ int Partition(vector<int>&num,int start,int end)
     {
         if(start<end&&key>num[end])end--;
         swap(num[start],num[end]);
+
+        for(auto x:num)cout<<x<<" ";
+        cout<<endl;
+
         if(start<end&&key<=num[start])start++;
         swap(num[start],num[end]);
+
+        for(auto x:num)cout<<x<<" ";
+        cout<<endl;
     }
     return start;
 }
@@ -49,8 +56,7 @@ int main(){
 int a[8]={4,5,1,6,2,7,3,8};
 vector<int> num(a,a+8);
 vector<int> minknum;
-
-for(auto x:Quicksort(num,6))cout<<x<<" ";
+for(auto x:Quicksort(num,3))cout<<x<<" ";
 cout<<endl;
 for(auto x:num)cout<<x<<" ";
 cout<<endl;
