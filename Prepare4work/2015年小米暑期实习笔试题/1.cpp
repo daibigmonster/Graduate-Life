@@ -7,3 +7,25 @@
 // 输出例子1:
 
 // 7
+
+#include <iostream>
+#include <vector>
+using namespace std;
+int countBitDiff(int m, int n) {
+    int bigger = max(m,n);
+    int less = min(m,n);
+    int count = 0;
+    while(bigger){
+        if(bigger%2 != less % 2)count++;
+        bigger /= 2;
+        less /= 2;
+    }
+    return count;
+}
+int main(){
+    int m,n;
+    while(cin >> m >> n){
+        cout << countBitDiff(m,n) << endl;
+    }
+    return 0;
+}
