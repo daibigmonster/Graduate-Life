@@ -10,25 +10,29 @@
 #include <vector>
 #include <algorithm>
 using namespace std;
-int calculateMax(vector<int> prices) {
-    int days = prices.size();
-    if(days == 2) return (prices[1] - prices[0]);
-    vector<vector<int> > dp(2,vector<int>(days + 1,0));
-    for(int j = 1;j < days;j++){
-        dp[0][j] = max(dp[0][j - 1] , dp[0][j - 1] + prices[j] - prices[j - 1]);
+int maxprofit(vector<int> prices,int begin,int end){
+    if(begin == end) return 0;
+    int maxres = 0,minres = prices[begin];
+        for(int i = begin;i <= end;i++){
+            minres = min(prices[i],minres);
+            maxres = max(prices[i] - minres,maxres);
+        }
+        return maxres;
     }
-    for(auto x : dp[0]) cout<<x<<" ";
-    cout << endl;
-    // for(int i = 0;i < 2;i++){
-    //     for(int j = 1;j < days;j++){
-    //         dp[i][j] = max(dp[i][j - 1] , dp[i][j - 1] + prices[j] - prices[j - 1]);
-    //     }
-    // }
+
+int calculateMax(vector<int> prices) {
+    int days = prices.size(),res = 0;
+    if(days == 2) return max(0,prices[1] - prices[0]);
+    for(int i = 0;i < days;i++){
+        res = max(res,maxprofit(prices,0,i) + maxprofit(prices,i,days - 1));
+    }
+    return res;
 }
+
 int main(){
     int a[6] = {3,8,5,1,7,8};
     vector<int> prices(a,a + 6);
-    // calculateMax(prices);
+    cout << calculateMax(prices) << endl;
     return 0;
 
 }
