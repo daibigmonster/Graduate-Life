@@ -7,3 +7,46 @@
 // 输出例子1:
 
 // 1
+/**
+    * 返回git树上两点的最近分割点
+    * 
+    * @param matrix 接邻矩阵，表示git树，matrix[i][j] == '1' 当且仅当git树中第i个和第j个节点有连接，节点0为git树的跟节点
+    * @param indexA 节点A的index
+    * @param indexB 节点B的index
+    * @return 整型
+    */
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+using namespace std;
+int getParent(string A){
+    
+}
+int getSplitNode(vector<string> matrix, int indexA, int indexB) {
+    if(indexA == 0 || indexB == 0) return 0;
+    int row = matrix.size();
+    int col = matrix[0].size();
+    map<int,int> recoder;
+    recoder[0] = 0;
+    for(int i = 0;i < row;i++){
+        for(int j = i + 1;j < col;j++){
+            if(matrix[i][j] == '1')recoder[j] = recoder[i] + 1;
+        }
+    }
+    if(recoder[indexA] == recoder[indexB]){
+        for(auto:)
+    }
+    // for(auto it = recoder.begin();it != recoder.end();it++){
+    //     cout << " " << (*it).first << " " << (*it).second << endl;
+    // }
+    // return 0;
+}
+
+int main(){
+    string str[5] = {"01011","10100","01000","10000","10000"};
+    vector<string> matrix(str,str + 5);
+    getSplitNode(matrix,1,2);
+    return 0;
+    
+}
