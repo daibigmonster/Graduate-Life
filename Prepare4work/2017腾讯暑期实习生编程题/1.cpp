@@ -1,27 +1,30 @@
-// 给定一个字符串s，你可以从中删除一些字符，使得剩下的串是一个回文串。如何删除才能使得回文串最长呢？
-// 输出需要删除的字符个数。
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <algorithm>
+using namespace std;
+int maxlength = 1;
+void getLength(string str){
+    string s(str.rbegin(),str.rend());
+    if(s == str){
+        if(s.size() > maxlength)maxlength = s.size();
+    }
+    else{
+        for(int i = 0;i < str.size();i++){
+            s = str.substr(0,i) + str.substr(i + 1);
+            if(s.size() == 1) return;
+            cout << s << " " << maxlength << endl;
+            if(s.size() > maxlength)getLength(s);
+        }
+    }
+}
 
-// 输入描述:
-
-
-// 输入数据有多组，每组包含一个字符串s，且保证:1<=s.length<=1000.
-  
-
-
-
-// 输出描述:
-
-
-// 对于每组数据，输出一个整数，代表最少需要删除的字符个数。
-
-
-// 输入例子1:
-
-// abcda
-// google
-
-
-// 输出例子1:
-
-// 2
-// 2
+int main(){
+    string str;
+    while(cin >> str){
+        getLength(str);
+        cout << str.size() - maxlength << endl;
+    }
+    return 0;
+}
