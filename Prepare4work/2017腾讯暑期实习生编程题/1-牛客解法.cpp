@@ -11,7 +11,7 @@ int maxLen(string s1, string s2){
         MaxLen[i][0] = 0;
     for (int i = 0; i < length2; ++i)
         MaxLen[0][i] = 0;
-     
+    
     for (int i = 1; i <= length1; ++i)
     {
         for (int j = 1; j <= length2; ++j)

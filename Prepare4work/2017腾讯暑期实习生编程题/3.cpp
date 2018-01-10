@@ -41,48 +41,38 @@
 #include <cmath>
 #include <algorithm>
 using namespace std;
+int getMin(vector<int> num){
+        int length = num.size();
+        int min = INT_MAX,mincount = 0;
+        //寻找最小值，最小值必定发生在相邻的两个数之间
+        for(int i = 0;i < length -1;i++){
+            int subnum = abs(num[i] - num[i + 1]);
+            if(subnum < min) min = subnum;
+        }
+        for(int i = 0;i < length - 1;i++){
+            for(int j = i + 1;j < length;j++){
+                if(num[j] - num[i] == min)mincount++;
+                else break;
+            }
+        }
+    return mincount;
+}
+int getMax(vector<int> num){
+    int begincount = count(num.begin(),num.end(),num[0]);
+    int endcount = count(num.begin(),num.end(),num[num.size() - 1]);
+    return begincount * endcount;
+}
 int main(){
     long N;
     while(cin >> N){
-        long maxnum = INT_MIN,minnum = INT_MAX;
-        int maxcount = 0,mincount = 0;
         vector<int> num(N,0);
         for(int i = 0;i < N;i++){
             cin >> num[i];            
         }
         sort(num.begin(),num.end());
-        for(int i = 0;i < N;i++){
-            if(i)
-        }
-
-        
-
-
-        for(int i = 0;i < N;i++){
-            for(int j = i + 1;j < N;j++){
-                long subnum = abs(long(num[i]) - long(num[j]));
-                // cout << "两个数" << num[i] << " " << num[j] << endl;
-                if(subnum > maxnum){
-                    maxnum = subnum;
-                    maxcount = 1;
-                    // cout << "最大差" << maxnum << " " << maxcount << endl;
-                } 
-                else if(subnum == maxnum){
-                    maxcount++;
-                    // cout << "最大差" << maxnum << " " << maxcount << endl;
-                } 
-                if(subnum < minnum){
-                    minnum = subnum;
-                    mincount = 1;
-                    // cout << "最小差" << minnum << " " << mincount << endl;
-                } 
-                else if(subnum == minnum){
-                    mincount++; 
-                    // cout << "最小差" << minnum << " " << mincount << endl;
-                } 
-            }
-        }
-    cout << mincount << " " << maxcount << endl;
+        if(num[0] == num[N -1]) cout << N * (N - 1)/2 << " " << N * (N - 1)/2 << endl;
+        else cout << getMin(num) << " " << getMax(num) << endl;
     }
+    return 0;
 }
 
