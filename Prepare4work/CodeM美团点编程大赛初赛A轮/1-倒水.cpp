@@ -32,3 +32,56 @@
 
 // Possible
 // 20.0000
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <stdio.h>
+using namespace std;
+double changeT(vector<int> t,vector<int> c,int maxt,int mint,int T,int C,double tempT,double allc){
+    double sumc = 0.0,c2 = 0.0;
+    // cout << tempT << " " << T << " " << C << endl;
+    if(T <= mint || T >= maxt){
+        int curt = (T <= mint) ? mint : maxt;
+        for(int i = 0;i < t.size();i++){
+            if(t[i] == curt) continue;
+            c2 = float((t[i] - curt) * c[i]) / float(curt - T);
+            sumc += c2;
+            if(sumc > C) return -1.0;
+            c2 = 0.0;
+        }
+        if(curt == mint) return double(curt);
+        else {
+            // cout << "温度和体积 " << tempT << " " << allc << endl;
+            return double(tempT / allc);
+        }
+    }
+    else 
+        return -1.0;
+}
+int main(){
+    int N,mint = 10001,maxt = 0;
+    long T,C;
+    while(cin >> N){
+        vector<int> t(N,0);
+        vector<int> c(N,0);
+        cin >> T >> C;
+        double tempT = double(T * C);
+        double allc = double(C);
+        for(int i = 0;i < N;i++){
+            cin >> t[i] >> c[i];
+            allc += double(c[i]);
+            tempT += double(t[i] * c[i]);
+            if(t[i] < mint) mint = t[i];
+            if(t[i] > maxt) maxt = t[i]; 
+        } 
+        double ans = changeT(t,c,maxt,mint,T,C,tempT,allc);
+        // cout << T << " " << C << endl;
+        // for(int i= 0; i < N;i++)cout << t[i] << " " << c[i] << endl;
+        if(ans == -1.0) cout << "Impossible" << endl;
+        else {
+            cout << "Possible" << endl;
+            printf("%.4f\n",ans);
+        }
+    }
+}
