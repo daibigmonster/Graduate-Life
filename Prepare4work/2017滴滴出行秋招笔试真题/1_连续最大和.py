@@ -18,3 +18,17 @@
 # 输出例子1:
 
 # 3
+import sys
+N = int(sys.stdin.readline().strip())
+num = list(map(int,sys.stdin.readline().strip().split()))
+
+cursum,allsum = 0,min(num)
+for n in num:
+    cursum += n
+    if cursum > allsum:
+        allsum = cursum
+    if cursum < 0:
+        cursum = 0
+
+
+print(allsum)
