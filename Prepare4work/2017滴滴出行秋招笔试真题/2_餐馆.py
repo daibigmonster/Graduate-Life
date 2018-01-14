@@ -18,3 +18,5 @@
 # 输出例子1:
 
 # 20
+import sys
+m,n = sys.stdin.readline().strip().split()
