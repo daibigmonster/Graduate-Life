@@ -6,6 +6,7 @@
 	ci = commit
 	cm = commit -m
 	br = branch
+	bra = branch -a
 	co = checkout
 	cob = checkout -b
 	cod = checkout -d
