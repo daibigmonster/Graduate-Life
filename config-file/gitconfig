@@ -1,0 +1,19 @@
+[user]
+	email = 546508148@qq.com
+	name = daibigmonster
+[alias]
+	st = status
+	ci = commit
+	cm = commit -m
+	br = branch
+	co = checkout
+	cob = checkout -b
+	cod = checkout -d
+	di = diff
+	pu = pull 
+	ps = push
+	pom = push origin master
+    ad = add *	
+
+[push]
+	default = simple
