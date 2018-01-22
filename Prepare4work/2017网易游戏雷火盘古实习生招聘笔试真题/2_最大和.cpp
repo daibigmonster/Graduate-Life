@@ -31,60 +31,62 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#define rep(i,x,y) for(int i = x;i < y;++i)
+#define dep(i,x,y) for(int i = x;i > y;--i)
 using namespace std;
-int getDsum(vector<int> temp,int N,int D){
-    sort(temp.begin(),temp.end());
-    int sum = 0;
-    for(int i = 1;i <= D;i++){
-        sum += temp[N - i];
-    }
-    return sum;
-}
-int getrowmaxsum(vector<vector<int> > num,int N,int D){
-    int maxrowsum = 0;
-    for(int i = 0;i < N;i++){
-        vector<int> temp(num[i].begin(),num[i].end());
-        int cursum = getDsum(temp,N,D);
-        if(cursum > maxrowsum) maxrowsum = cursum;
-    }
-    return maxrowsum;
-}
-int getcolmaxsum(vector<vector<int> > num,int N,int D){
-    int maxcolsum = 0;
-    for(int i = 0;i < N;i++){
-        vector<int> temp(N,0);
-        for(int j = 0;j < N;j++){
-            temp[j] = num[j][i];
+
+int getcolrowsum(vector<vector<int> > num,int N,int D){
+    int maxrowsum = 0,maxcolsum = 0;
+    rep(i,0,N){
+        rep(j,0,N){
+            int cursum = 0;
+            rep(k,0,D){
+                if(j + k >= N)break;
+                cursum += num[i][j + k];
+            }
+            maxrowsum = maxrowsum < cursum ? cursum : maxrowsum;
         }
-        int cursum = getDsum(temp,N,D);
-        if(cursum > maxcolsum) maxcolsum = cursum;
     }
-    return maxcolsum;
+    rep(i,0,N){
+        rep(j,0,N){
+            int cursum = 0;
+            rep(k,0,D){
+                if(j + k >= N)break;
+                cursum += num[j + k][i];
+            }
+            maxcolsum = maxcolsum < cursum ? cursum : maxcolsum;
+        }
+    }
+    return max(maxrowsum,maxcolsum);
+
+
 }
+
 int getxiemaxsum(vector<vector<int> > num,int N,int D){
-    if(D == 1)return 0;
-    int maxxiesum = 0;
-    for(int i = 0;i < N - D + 1;i++){
-        vector<int> temp1,temp2,temp3,temp4;
-        for(int j = 0;j < N - i;j++){
-            temp1.push_back(num[i + j][j]);
-            temp2.push_back(num[j][i + j]);
-            temp3.push_back(num[N - 1 - i - j][j]);
-            temp4.push_back(num[i + j][N - 1 - j]);
+    int zuosum = 0,yousum = 0;
+    rep(i,0,N){
+        rep(j,0,N){
+            int cursum = 0;
+            rep(k,0,D){
+                if(i + k >= N || j + k >= N)break;
+                cursum += num[i + k][j + k];
+            }
+            zuosum = zuosum < cursum ? cursum : zuosum; 
         }
-        // for(int j = 0;j < N - i;j++){
-            
-        // }
-        
-        int cursum1 = getDsum(temp1,temp1.size(),D);
-        int cursum2 = getDsum(temp2,temp2.size(),D);
-        int cursum3 = getDsum(temp3,temp3.size(),D);
-        int cursum4 = getDsum(temp4,temp4.size(),D);
-        int tempmax = max(max(cursum1,cursum2),max(cursum3,cursum4));
-        if(tempmax > maxxiesum) maxxiesum = tempmax;
     }
-    return maxxiesum;
+    rep(i,0,N - D + 1){
+        for(int j = N - 1;j >= 0;j--){
+            int cursum = 0;
+            rep(k,0,D){
+                if(i + k >= N || j - k < 0)break;
+                cursum += num[i + k][j - k];
+            } 
+            yousum = yousum < cursum ? cursum : yousum;
+        }
+    }
+    return max(zuosum,yousum);
 }
+
 int main(){
     int N,D;
     while(cin >> N >> D){
@@ -94,11 +96,7 @@ int main(){
                 cin >> num[i][j];
             }
         }
-        int rowsum = getrowmaxsum(num,N,D);
-        int colsum = getcolmaxsum(num,N,D);
-        int xiesum = getxiemaxsum(num,N,D);
-        int res = max(xiesum,max(rowsum,colsum));
-        cout << res << endl;
+        cout << max(getcolrowsum(num,N,D),getxiemaxsum(num,N,D)) << endl;
     }
     return 0;
 }
