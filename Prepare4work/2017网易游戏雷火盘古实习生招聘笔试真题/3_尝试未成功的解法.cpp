@@ -6,17 +6,21 @@
 #define dep(i,x,y) for(int i = x;i > y;--i)
 using namespace std;
 struct Position{int x,y;};
-struct BoxManPosition{
+struct BoxManPosition
+{
     int bx,by,nx,ny;
     BoxManPosition(int a,int b,int c,int d):bx(a),by(b),nx(c),ny(d){};
 };
+
+
 Position man,box,destination;
 
 int BFSmap(vector<vector<char> >map,int N,int M){
-    int a[4] = {1,-1,0,0},b[4] = {0,0,1,-1},step = 0;
+    int a[4] = {1,-1,0,0},b[4] = {0,0,1,-1};
     int Visited[N][M][N][M];
     memset(Visited,0,sizeof(Visited));
     Visited[box.x][box.y][man.x][man.y] = 1;
+    int step = 0;
     deque<BoxManPosition> array;
     array.push_back(BoxManPosition(box.x,box.y,man.x,man.y));
     while(array.size()) {
@@ -29,11 +33,22 @@ int BFSmap(vector<vector<char> >map,int N,int M){
             rep(i,0,4){
                 BoxManPosition np = cp;
                 np.nx += a[i],np.ny += b[i];
-                if(np.nx >= N || np.nx < 0 || np.ny >= M || np.ny < 0 || map[np.nx][np.ny] == '#')continue;
-                if(np.nx == np.bx && np.ny == np.by) np.bx += a[i],np.by += b[i];
-                if(np.bx >= N || np.bx < 0 || np.by >= M || np.by < 0 || map[np.bx][np.by] == '#')continue;
-                if(map[np.bx][np.by] == '@') return step;
-                if(!Visited[np.bx][np.by][np.nx][np.ny])array.push_back(np);
+                if(-1 < np.nx && np.nx < N && -1 <  np.ny && np.ny < M && map[np.nx][np.ny] != '#'){
+                    if(np.nx == np.bx && np.ny == np.by){
+                        np.bx += a[i],np.by += b[i];
+                        if(-1 < np.bx && np.bx < N && -1 <  np.by && np.by < M && map[np.bx][np.by] != '#'){
+                            if(map[np.bx][np.by] == '@') return step;
+                            if(!Visited[np.bx][np.by][np.nx][np.ny]){
+                                array.push_back(np);
+                            }
+                        }
+                    }
+                    else{
+                        if(!Visited[np.bx][np.by][np.nx][np.ny]){
+                            array.push_back(np);
+                        }
+                    }
+                }
             }
         }
     }
@@ -54,4 +69,5 @@ int main(){
         }
         cout << BFSmap(map,N,M) << endl;
     }
+    return 0;
 }
