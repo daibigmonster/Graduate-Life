@@ -33,3 +33,31 @@
 
 // 3
 // 11
+#include <iostream>
+#include <vector>
+#include <deque>
+#define rep(i,x,y) for(int i = x;i < y;++i)
+#define dep(i,x,y) for(int i = x;i > y;--i)
+using namespace std;
+struct position{
+    int x,y;
+    position(int x,int y):x(x),y(y){}
+};
+    int a[] = {0,0,1,-1},b[] = {1,-1,0,0};
+    char mp[10][10];
+    int vis[10][10][10][10];
+int BFSmap(vector<vector<int> >map){
+    
+}
+
+int main(){
+    int N，M;
+    while(cin >> N >> M){
+        vector<vector<int> >map(N,vector<int>(M,0));
+        rep(i,0,N){
+            rep(j,0,M){
+                cin >> map[i][j];
+            }
+        }
+    }
+}
