@@ -6,6 +6,10 @@
         "vector": "cpp",
         "chrono": "cpp",
         "limits": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "array": "cpp",
+        "bitset": "cpp",
+        "initializer_list": "cpp",
+        "utility": "cpp"
     }
 }
