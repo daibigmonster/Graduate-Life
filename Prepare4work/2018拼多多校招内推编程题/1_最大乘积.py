@@ -19,7 +19,22 @@
 
 # // 24
 import sys
+N = int(sys.stdin.readline().strip())
 line = sys.stdin.readline().strip().split()
 line = [int(i) for i in line]
+if N < 3:
+    res = 1
+    for i in line:
+        res *= i
+else:
+    line.sort()
 
-for i in line 
+    left = line[0] * line[1]
+    right = line[-3] * line[-2]
+
+    if left > right:
+        res = left * line[-1]
+    else :
+        res = right * line[-1]
+
+print(res)
