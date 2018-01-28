@@ -6,21 +6,29 @@
 #  第三行：m，表示w数组元素个数
 #  第四行：m个w数组元素
 
-
-
 # 输出描述:
-
 # 上台表演学生人数
-
-
 # 输入例子1:
-
 # 3 
-#  2 2 3
-#  2
-#  3 1 
-
-
+# 2 2 3
+# 2
+# 3 1 
 # 输出例子1:
-
 # 1
+import bisect
+import sys
+line = sys.stdin
+n = int(line.readline().strip())
+h = list(map(int,line.readline().strip().split(' ')))
+m = int(line.readline().strip())
+w = list(map(int,line.readline().strip().split(' ')))
+w.sort()
+# print(h,w)
+count = 0
+for i in h:
+    index = bisect.bisect_left(w,i)
+    if index == len(w) :
+        continue
+    count += 1
+    del w[index]
+print(count)
