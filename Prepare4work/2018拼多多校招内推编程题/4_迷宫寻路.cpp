@@ -12,13 +12,13 @@ struct Position
     char key;
     Position(char key = '#',int x = -1,int y = -1):key(key),x(x),y(y){};
 };
-
-int BFS(vector<vector<char> >maze,int M,int N,Position start,char dest)
+Position man,dest;
+int BFS(vector<vector<char> >maze,int M,int N)
 {
     int a[4] = {1,-1,0,0},b[4] = {0,0,1,-1},step = 0;
-    int Visited[M][N];
+    int Visited[101][101];
     memset(Visited,0,sizeof(Visited));
-    Visited[start.x][start.y] = 1;
+    Visited[man.x][start.y] = 1;
     deque<Position> array;
     array.push_back(start);
     while(array.size())
@@ -34,8 +34,9 @@ int BFS(vector<vector<char> >maze,int M,int N,Position start,char dest)
             {
                 Position tempposition = curposition;
                 tempposition.x += a[j],tempposition.y += b[j];
-                if(tempposition.x >= 0 && tempposition.x < M && tempposition.y >= 0
-                && tempposition.y < N && (maze[tempposition.x][tempposition.y] == '1'
+                if(tempposition.x < 0 && tempposition.x >= M && tempposition.y < 0 && tempposition.y >= N) continue;
+
+&& (maze[tempposition.x][tempposition.y] == '1'
                 || maze[tempposition.x][tempposition.y] == dest || maze[tempposition.x][tempposition.y] == '2' ))
                 {
                     if(maze[tempposition.x][tempposition.y] == dest) return step;
@@ -60,16 +61,16 @@ int main()
     while(cin >> M >> N)
     {
         vector<vector<char> >maze(M,vector<char>(N,'0'));
-        vector<Position> doors;
-        vector<Position> keys;
+        // vector<Position> doors;
+        // vector<Position> keys;
         rep(i,0,M)
         {
             rep(j,0,N)
             {
                 cin >> maze[i][j];
                 if(maze[i][j] == '2') man.key = '2',man.x = i,man.y = j;
-                if(maze[i][j] >= 'A' && maze[i][j] <= 'Z') doors.push_back(Position(maze[i][j],i,j));
-                if(maze[i][j] >='a' && maze[i][j] <= 'z') keys.push_back(Position(maze[i][j],i,j));
+                // if(maze[i][j] >= 'A' && maze[i][j] <= 'Z') doors.push_back(Position(maze[i][j],i,j));
+                // if(maze[i][j] >='a' && maze[i][j] <= 'z') keys.push_back(Position(maze[i][j],i,j));
                 if(maze[i][j] == '3') dest.key = '3',dest.x = i,dest.y = j;
             }
         }
