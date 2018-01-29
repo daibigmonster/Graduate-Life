@@ -18,7 +18,6 @@
 # 输出例子1:
 
 # 70820244829634538040848656466105986748
-import sys
-line = sys.stdin.readline().strip().split()
 N,M = input().strip().split()
+ 
 print(eval(N) * eval(M))

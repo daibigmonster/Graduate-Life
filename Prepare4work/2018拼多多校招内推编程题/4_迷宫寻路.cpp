@@ -8,46 +8,31 @@
 using namespace std;
 struct Position
 {
-    int x,y;
-    char key;
-    Position(char key = '#',int x = -1,int y = -1):key(key),x(x),y(y){};
+    int x,y,key,step;
+    Position(int x = 0,int y = 0,int key = 0,int step = 0):x(x),y(y),key(key),step(step){};
 };
-Position man,dest;
-int BFS(vector<vector<char> >maze,int M,int N)
+int Visited[101][101][1200];
+
+int BFS(vector<vector<char> >maze,int M,int N,Position start)
 {
-    int a[4] = {1,-1,0,0},b[4] = {0,0,1,-1},step = 0;
-    int Visited[101][101];
-    memset(Visited,0,sizeof(Visited));
-    Visited[man.x][start.y] = 1;
+    int a[4] = {1,-1,0,0},b[4] = {0,0,1,-1};
     deque<Position> array;
     array.push_back(start);
     while(array.size())
     {
-        int length = array.size();
-        step++;
-        rep(i,0,length)
+        Position curposition = array.front();
+        array.pop_front();
+        if(maze[curposition.x][curposition.y] == '3') return curposition.step;
+        rep(j,0,4)
         {
-            Position curposition = array.front();
-            array.pop_front();
-            Visited[curposition.x][curposition.y] = 1;
-            rep(j,0,4)
+            int tempx = curposition.x + a[j],tempy = curposition.y + b[j],tempkey = curposition.key,tempstep = curposition.step;
+            if(tempx < 0 || tempx >= M || tempy < 0 || tempy >= N || maze[tempx][tempy] == '0') continue;
+            if('a' <= maze[tempx][tempy] && maze[tempx][tempy] <= 'z') tempkey= tempkey | (1 << (maze[tempx][tempy]-'a'));
+            if('A' <= maze[tempx][tempy] && maze[tempx][tempy] <= 'Z' && (tempkey & (1 << (maze[tempx][tempy]-'A'))) == 0) continue;
+            if(!Visited[tempx][tempy][tempkey])
             {
-                Position tempposition = curposition;
-                tempposition.x += a[j],tempposition.y += b[j];
-                if(tempposition.x < 0 && tempposition.x >= M && tempposition.y < 0 && tempposition.y >= N) continue;
-
-&& (maze[tempposition.x][tempposition.y] == '1'
-                || maze[tempposition.x][tempposition.y] == dest || maze[tempposition.x][tempposition.y] == '2' ))
-                {
-                    if(maze[tempposition.x][tempposition.y] == dest) return step;
-                    else
-                    {
-                        if(!Visited[tempposition.x][tempposition.y])
-                        {
-                            array.push_back(tempposition);
-                        }
-                    }    
-                }
+                Visited[tempx][tempy][tempkey] = 1;
+                array.push_back(Position(tempx,tempy,tempkey,tempstep + 1));
             }
         }
     }
@@ -57,43 +42,21 @@ bool myfunction (Position A,Position B) { return (A.key < B.key); }
 int main()
 {
     int M,N;
-    Position man,dest;
+    Position man;
     while(cin >> M >> N)
     {
         vector<vector<char> >maze(M,vector<char>(N,'0'));
-        // vector<Position> doors;
-        // vector<Position> keys;
+        memset(Visited,0,sizeof(Visited));
         rep(i,0,M)
         {
             rep(j,0,N)
             {
                 cin >> maze[i][j];
-                if(maze[i][j] == '2') man.key = '2',man.x = i,man.y = j;
-                // if(maze[i][j] >= 'A' && maze[i][j] <= 'Z') doors.push_back(Position(maze[i][j],i,j));
-                // if(maze[i][j] >='a' && maze[i][j] <= 'z') keys.push_back(Position(maze[i][j],i,j));
-                if(maze[i][j] == '3') dest.key = '3',dest.x = i,dest.y = j;
+                if(maze[i][j] == '2') man.x =i,man.y = j;
             }
         }
-        sort(doors.begin(),doors.end(),myfunction);
-        sort(keys.begin(),keys.end(),myfunction);
-        int getkeysteps = 10000;
-        if(doors.empty()) cout << BFS(maze,M,N,man,'3') << endl;
-        else
-        {
-            int man2deststeps = BFS(maze,M,N,man,'3');
-            rep(i,0,doors.size())
-            {
-                cout << "key door " << keys[i].key << doors[i].key << endl;
-                int man2keysteps = BFS(maze,M,N,man,keys[i].key);
-                cout << "man2keysteps " << man2keysteps << endl;
-                int key2doorsteps = BFS(maze,M,N,keys[i],doors[i].key);
-                cout << "key2doorsteps " << key2doorsteps << endl;
-                int door2deststeps = BFS(maze,M,N,doors[i],'3');
-                cout << "door2deststeps " << door2deststeps << endl;
-                getkeysteps = min(man2keysteps + key2doorsteps + door2deststeps ,getkeysteps);
-            }
-            cout << min(getkeysteps,man2deststeps) << endl;
-        }
+        Visited[man.x][man.y][0] = 1;
+        cout << BFS(maze,M,N,man) << endl;
     }
 }
 
