@@ -3,6 +3,6 @@
  */
 public interface Pet {
     public String getName();
-    public String geColor();
+    public String getColor();
     public int getAge();
 }
