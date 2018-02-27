@@ -15,8 +15,7 @@
 /**
  * J3270218
  */
-public class J3
-270218{
+public class J3270218{
 	public static void main(String args[]) {
 		System.out.println("*******计算开始********");
 		int i = 0,j = 0;
@@ -28,18 +27,23 @@ public class J3
 			int temp = i / j;
 			System.out.println("两个数字相除的结果:" + temp);
 			System.out.println("-----------------------");
-		}catch(ArithmeticException e) {
-			System.out.println("算术异常: " + e);
 		}
-		catch(NumberFormatException e) {
-			System.out.println("数字转换异常: " + e);
-		}
-		catch(ArrayIndexOutOfBoundsException e) {
-			System.out.println("数组越界异常: " + e);
-		}
+		// catch(ArithmeticException e) {
+		// 	System.out.println("算术异常: " + e);
+		// }
+		// catch(NumberFormatException e) {
+		// 	System.out.println("数字转换异常: " + e);
+		// }
+		// catch(ArrayIndexOutOfBoundsException e) {
+		// 	System.out.println("数组越界异常: " + e);
+		// }
 		// finally {
 			// System.out.println("不管是否出现异常，都执行此代码");
 		// }
+		catch(Exception e)
+		{
+			System.out.println("异常:" + e);
+		}
 		System.out.println("*******计算结束********");
 	}
 }
