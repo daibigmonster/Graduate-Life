@@ -50,7 +50,7 @@ int main()
             if(words[i] != wordA[i])countA++;
             if(words[i] != wordB[i])countB++;
         }
-        cout << wordA << " " << wordB << endl;
+        //cout << wordA << " " << wordB << endl;
         cout << min(countA,countB) << endl;
     }
 }
