@@ -6,3 +6,4 @@ Prepare4work/2017腾讯暑期实习生编程题/a.out
 *.out
 test.*
 *.txt
+*/.vscode/*
