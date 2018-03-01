@@ -1,8 +1,8 @@
-package dai;//加入包只是让类的管理更方便
+package dai.Demo01;//加入包只是让类的管理更方便
 /**
  * Demo
  */
-class Demo {
+public class Demo {
     public String getInfo() {
         return "Hello World!!!";
     }
