@@ -7,3 +7,6 @@ Prepare4work/2017腾讯暑期实习生编程题/a.out
 test.*
 *.txt
 */.vscode/*
+Java/test/*
+Java/.vscode
+PHP/test/*
