@@ -1,9 +1,9 @@
 package dai.demo15.getclassdemo;
 class X{}
 /**
- * GetClassDemo02
+ * GetClassDemo03
  */
-public class GetClassDemo02 {
+public class GetClassDemo03 {
 
     public static void main(String[] args) {
         Class<?> c1 = null;
@@ -15,5 +15,10 @@ public class GetClassDemo02 {
             //TODO: handle exception
             e.printStackTrace();
         }
+        c2 = new X().getClass();
+        c3 = X.class;
+        System.out.println("类名称: " + c1.getName());
+        System.out.println("类名称: " + c2.getName());
+        System.out.println("类名称: " + c3.getName();
     }
 }
