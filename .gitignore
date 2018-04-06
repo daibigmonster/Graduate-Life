@@ -10,3 +10,4 @@ test.*
 Java/test/*
 Java/.vscode
 PHP/test/*
+.idea
