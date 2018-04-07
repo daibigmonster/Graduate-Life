@@ -10,3 +10,5 @@ test.*
 Java/test/*
 Java/.vscode
 PHP/test/*
+*.class
+
