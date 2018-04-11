@@ -12,3 +12,4 @@ Java/.vscode
 PHP/test/*
 *.class
 .idea
+*.gch
