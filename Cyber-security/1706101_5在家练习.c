@@ -55,7 +55,7 @@ void ip_callback(struct ip * a_packet)
 }
 int main()
 {
-   nids_params.device ="enp2s0";
+   nids_params.device ="eno1";
    if(!nids_init()){
       cout<<"初始化失败！"<<endl;
    }
